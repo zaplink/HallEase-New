@@ -1,26 +1,11 @@
 'use client';
 
 import {
-	LayoutDashboard,
 	LogOut,
 	ChevronDown,
 	ChevronRight,
-	CalendarClock,
-	Building2,
-	CircleCheckBig,
-	CircleX,
-	CirclePause,
-	FilePlus2,
-	Airplay,
-	BookOpen,
-	Megaphone,
-	Mails,
-	Settings,
-	UserCog,
-	CircleHelp,
-	Flag,
-	ChartNoAxesCombined,
-	FileChartColumn,
+	BotMessageSquare,
+	Calendar as CalendarIcon,
 } from 'lucide-react';
 import {
 	Sidebar,
@@ -48,11 +33,9 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { Calendar as CalendarIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Calendar } from '@/components/ui/calendar';
-import React from 'react';
 import { getBaseUrl } from '@/utils/getBaseUrl';
 import { logout } from '@/app/login/logoutAction';
 import {
@@ -62,135 +45,21 @@ import {
 } from '@/components/ui/collapsible';
 import Link from 'next/link';
 import { useProfile } from '@/hooks/useProfile';
+import {
+	Drawer,
+	DrawerContent,
+	DrawerDescription,
+	DrawerHeader,
+	DrawerTitle,
+	DrawerTrigger,
+} from '@/components/ui/drawer';
+import { format } from 'date-fns';
+import sidebarMenu from '@/layouts/Sidebar/menu-items';
+import { Skeleton } from '@/components/ui/skeleton';
 
-const sidebarMenu = [
-	{
-		sectionTitle: 'Dashboard & Overview',
-		sectionMenu: [
-			{
-				itemTitle: 'Dashboard',
-				itemUrl: '/dashboard',
-				itemIcon: LayoutDashboard,
-			},
-			{
-				itemTitle: 'Calender View',
-				itemUrl: '/calender-view',
-				itemIcon: CalendarClock,
-			},
-		],
-	},
-	{
-		sectionTitle: 'Event Management',
-		sectionMenu: [
-			{
-				itemTitle: 'View Events',
-				itemUrl: '/event',
-				itemIcon: Airplay,
-			},
-		],
-	},
-	{
-		sectionTitle: 'Hall & Booking Management',
-		sectionMenu: [
-			{
-				itemTitle: 'Book a Hall',
-				itemUrl: '/booking',
-				itemIcon: FilePlus2,
-			},
-			{
-				itemTitle: 'Booking Requests',
-				itemUrl: '/requests',
-				itemIcon: BookOpen,
-				subMenu: [
-					{
-						subTitle: 'Pending',
-						subUrl: '/requests/pending',
-						subIcon: CirclePause,
-					},
-					{
-						subTitle: 'Approved',
-						subUrl: '/requests/approved',
-						subIcon: CircleCheckBig,
-					},
-					{
-						subTitle: 'Rejected',
-						subUrl: '/requests/rejected',
-						subIcon: CircleX,
-					},
-				],
-			},
-			{
-				itemTitle: 'Hall Facilities',
-				itemUrl: '/hall',
-				itemIcon: Building2,
-			},
-		],
-	},
-	{
-		sectionTitle: 'Notifications & Communication',
-		sectionMenu: [
-			{
-				itemTitle: 'Announcements',
-				itemUrl: '/announcments',
-				itemIcon: Megaphone,
-			},
-			{
-				itemTitle: 'Email & SMS Reminders',
-				itemUrl: '/remainders',
-				itemIcon: Mails,
-			},
-		],
-	},
-	{
-		sectionTitle: 'Reports & Analytics',
-		sectionMenu: [
-			{
-				itemTitle: 'Reports',
-				itemUrl: '/reports',
-				itemIcon: FileChartColumn,
-			},
-			{
-				itemTitle: 'Analytics',
-				itemUrl: '/analytics',
-				itemIcon: ChartNoAxesCombined,
-			},
-		],
-	},
-	{
-		sectionTitle: 'Settings & Configurations',
-		sectionMenu: [
-			{
-				itemTitle: 'System Preferences',
-				itemUrl: '/system-preferences',
-				itemIcon: Settings,
-			},
-			{
-				itemTitle: 'Access Control',
-				itemUrl: '/access-control',
-				itemIcon: UserCog,
-			},
-		],
-	},
-	{
-		sectionTitle: 'Help & Support',
-		sectionMenu: [
-			{
-				itemTitle: 'FAQs & Documentation',
-				itemUrl: '/documentation',
-				itemIcon: CircleHelp,
-			},
-			{
-				itemTitle: 'Report an Issue',
-				itemUrl: '/report-issue',
-				itemIcon: Flag,
-			},
-		],
-	},
-];
-
-type SidebarLayoutProps = {
+type SidebarLayoutProps = Readonly<{
 	children: React.ReactNode;
-};
+}>;
 
 export default function SidebarLayout({ children }: SidebarLayoutProps) {
 	// Current path of URL
@@ -198,13 +67,10 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 
 	// Calender state
 	const [date, setDate] = React.useState<Date | undefined>(new Date());
-	const [isCalendarVisible, setIsCalendarVisible] = useState(false);
-	const toggleCalendar = () => {
-		setIsCalendarVisible((prevState) => !prevState); // Toggle the calendar visibility
-	};
+
+	const formattedDate = date ? format(date, 'dd MMMM yyyy') : '';
 
 	const baseUrl = getBaseUrl();
-	// console.log(baseUrl);
 
 	// State to track the currently open submenu
 	const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
@@ -274,6 +140,38 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 		));
 	};
 
+	const getAvatar = () => {
+		if (loading)
+			return (
+				<div className='flex items-center space-x-3'>
+					<Skeleton className='h-10 w-10 rounded-full' />
+					<div className='space-y-3'>
+						<Skeleton className='h-3 w-[180px]' />
+						<Skeleton className='h-3 w-[160px]' />
+					</div>
+				</div>
+			);
+		if (profile)
+			return (
+				<>
+					<Avatar className='mr-1'>
+						<AvatarImage src={profile.pro_pic} />
+						<AvatarFallback>User</AvatarFallback>
+					</Avatar>
+					<span className='font-bold'>{profile?.full_name}</span>
+				</>
+			);
+		return (
+			<>
+				<Avatar className='mr-1'>
+					<AvatarImage src='https://github.com/shadcn.png' />
+					<AvatarFallback>Invalid User</AvatarFallback>
+				</Avatar>
+				<span className='font-bold'>Invalid User</span>
+			</>
+		);
+	};
+
 	return (
 		// Sidebar placeholder
 		<SidebarProvider>
@@ -287,36 +185,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 								className='flex flex-row justify-left'
 							>
 								<SidebarMenuButton className='h-auto p-0 m-2'>
-									<Avatar className='mr-5'>
-										{/* <AvatarImage src='https://github.com/shadcn.png' /> */}
-
-										{loading ? (
-											<AvatarImage src='https://github.com/shadcn.png' />
-										) : profile ? (
-											<AvatarImage
-												src={profile.pro_pic}
-											/>
-										) : (
-											<AvatarImage src='https://github.com/shadcn.png' />
-										)}
-										<AvatarFallback>User</AvatarFallback>
-									</Avatar>
-
-									{/* <span className='font-bold'>John Doe</span> */}
-
-									{loading ? (
-										<span className='font-bold'>
-											Loading...
-										</span>
-									) : profile ? (
-										<span className='font-bold'>
-											{profile?.full_name}
-										</span>
-									) : (
-										<span className='font-bold'>
-											User not found
-										</span>
-									)}
+									{getAvatar()}
 								</SidebarMenuButton>
 							</Link>
 						</SidebarMenuItem>
@@ -362,7 +231,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 															>
 																<item.itemIcon
 																	size={20}
-																	className='mr-5'
+																	className='mr-1'
 																/>
 																<span>
 																	{
@@ -415,7 +284,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 																						size={
 																							20
 																						}
-																						className='mr-5'
+																						className='mr-1'
 																					/>
 																					<span>
 																						{
@@ -453,7 +322,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 														>
 															<item.itemIcon
 																size={20}
-																className='mr-5'
+																className='mr-1'
 															/>
 															<span>
 																{item.itemTitle}
@@ -485,7 +354,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 								>
 									<LogOut
 										size={20}
-										className='mr-5 text-red-500'
+										className='mr-1 text-red-500'
 									/>
 									<span className='text-red-500'>Logout</span>
 								</button>
@@ -517,31 +386,52 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 						</Breadcrumb>
 					</div>
 
-					{/* Calender button */}
-					<div>
+					<div className='flex flex-row gap-1'>
+						{/* Bot button */}
 						<Button
-							onClick={toggleCalendar}
+							// onClick={toggleCalendar}
 							variant='ghost'
 							className='p-2'
 						>
-							<CalendarIcon size={20} />
+							<BotMessageSquare size={20} />
 						</Button>
+
+						{/* Calender */}
+						<Drawer>
+							<DrawerTrigger asChild>
+								<Button
+									// onClick={toggleCalendar}
+									variant='ghost'
+									className='p-2'
+								>
+									<CalendarIcon size={20} />
+								</Button>
+							</DrawerTrigger>
+							<DrawerContent>
+								<div className='mx-auto w-full max-w-sm'>
+									<DrawerHeader>
+										<DrawerTitle>
+											{formattedDate}
+										</DrawerTitle>
+										<DrawerDescription>
+											Have a Good Day
+										</DrawerDescription>
+									</DrawerHeader>
+									<div className='flex'>
+										<Calendar
+											mode='single'
+											selected={date}
+											onSelect={setDate}
+											className='rounded-md border bg-white'
+										/>
+									</div>
+								</div>
+							</DrawerContent>
+						</Drawer>
 					</div>
 				</div>
 
 				<Separator />
-
-				{/* Calender */}
-				<div className='relative w-full'>
-					{isCalendarVisible && (
-						<Calendar
-							mode='single'
-							selected={date}
-							onSelect={setDate}
-							className='rounded-md border absolute bg-white z-10 top-0 right-2'
-						/>
-					)}
-				</div>
 
 				{/* Put page content here*/}
 				<div className='px-2 pt-2 flex flex-col h-full'>{children}</div>
