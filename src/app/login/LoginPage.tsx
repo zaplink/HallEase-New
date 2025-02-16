@@ -3,7 +3,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-
 import { Button } from '@/components/ui/button';
 import {
 	Form,
@@ -29,6 +28,8 @@ import {
 // import { Label } from "@/components/ui/label";
 import { BsFillQuestionCircleFill } from 'react-icons/bs';
 import { login } from './actions';
+import { useState } from 'react';
+import { Loader } from 'lucide-react';
 
 // Define the form schema with new fields for email and password
 const formSchema = z.object({
@@ -50,12 +51,23 @@ export default function LoginForm() {
 		},
 	});
 
-	// Define the submit handler function
-	// const onSubmit = async (values: z.infer<typeof formSchema>) => {
-	//   console.log("Form submitted with values:", values);
-	// };
+	// track loading state
+	const [isLoading, setIsLoading] = useState(false);
 
-	// Return the form JSX
+	// Define the submit handler function
+	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		setIsLoading(true); // Start loading
+
+		try {
+			await login(new FormData(event.currentTarget)); // Call login function
+		} catch (error) {
+			console.error('Login failed', error);
+		} finally {
+			setIsLoading(false); // Stop loading
+		}
+	};
+
 	return (
 		// <div className="flex items-center justify-center min-h-screen bg-gray-50">
 		<Card className='w-full max-w-md shadow-md bg-white/80'>
@@ -65,10 +77,7 @@ export default function LoginForm() {
 
 			<CardContent>
 				<Form {...form}>
-					<form
-						// onSubmit={form.handleSubmit(onSubmit)}
-						className='space-y-8'
-					>
+					<form onSubmit={handleSubmit} className='space-y-8'>
 						{/* Email Field */}
 						<FormField
 							control={form.control}
@@ -110,11 +119,19 @@ export default function LoginForm() {
 						<Button
 							type='submit'
 							className='w-full mt-10 bg-black text-white hover:bg-gray-800 
-            hover:shadow-lg hover:scale-105 transition-all duration-300 flex 
-            items-center justify-center space-x-2'
-							formAction={login}
+            					hover:shadow-lg hover:scale-105 transition-all duration-300 flex 
+            					items-center justify-center space-x-2'
+							disabled={isLoading} // Disable button when loading
 						>
-							Login
+							{isLoading ? (
+								<>
+									<Loader className='animate-spin w-5 h-5' />{' '}
+									{/* Spinning loader */}
+									<span>Logging in...</span>
+								</>
+							) : (
+								'Login'
+							)}
 						</Button>
 					</form>
 				</Form>
