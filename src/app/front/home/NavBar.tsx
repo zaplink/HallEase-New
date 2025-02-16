@@ -1,26 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Menu } from 'lucide-react'; // For the mobile menu icon
+// import Link from "next/link";
 
-const NavBar = () => {
-	const [isScrolled, setIsScrolled] = useState(false);
-
-	// Function to track scroll position
-	useEffect(() => {
-		const handleScroll = () => {
-			// Change navbar when scrolled past 100px
-			if (window.scrollY > 100) {
-				setIsScrolled(true);
-			} else {
-				setIsScrolled(false);
-			}
-		};
-
-		// Listen for scroll events
-		window.addEventListener('scroll', handleScroll);
-		return () => window.removeEventListener('scroll', handleScroll);
-	}, []);
-
-	// Function to scroll to a specific section smoothly
+const Navbar = () => {
 	const scrollToSection = (id: string) => {
 		const element = document.getElementById(id);
 		if (element) {
@@ -32,27 +21,65 @@ const NavBar = () => {
 	};
 
 	return (
-		<nav
-			className={`fixed top-0 w-full z-20 py-6 transition-all duration-300 ${
-				isScrolled
-					? 'bg-white/30 backdrop-blur-md shadow-md'
-					: 'bg-transparent'
-			}`}
-		>
-			<div className='container mx-auto px-6 flex justify-center items-center md:gap-20 sm:gap-10'>
-				{['home', 'users', 'public', 'contacts'].map((section) => (
-					<Button
-						key={section}
-						variant='outline'
-						onClick={() => scrollToSection(section)}
-						className='rounded-full px-6 py-5 text-xl font-bold border-2 text-blue-500 hover:bg-blue-500 hover:text-white active:bg-blue-600 active:text-white transition duration-300'
-					>
-						{section.charAt(0).toUpperCase() + section.slice(1)}
-					</Button>
-				))}
+		<nav className='fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-white/80 backdrop-blur-md shadow-md'>
+			<div className='container mx-auto px-2 flex justify-between items-center py-4'>
+				{/* Logo */}
+				<div
+					className='flex items-center space-x-3 cursor-pointer'
+					onClick={() => scrollToSection('home')}
+				>
+					<Image
+						src='/fct-logo.png'
+						alt='Logo'
+						width={50}
+						height={50}
+						className='rounded-full'
+					/>
+					<span className='text-xl font-bold text-blue-600'>
+						HallEase
+					</span>
+				</div>
+
+				{/* Desktop Menu */}
+				<div className='hidden md:flex space-x-6'>
+					{['home', 'users', 'public', 'contacts'].map((section) => (
+						<Button
+							key={section}
+							variant='ghost'
+							onClick={() => scrollToSection(section)}
+							className='text-lg font-medium text-gray-700 hover:text-blue-600 transition'
+						>
+							{section.charAt(0).toUpperCase() + section.slice(1)}
+						</Button>
+					))}
+				</div>
+
+				{/* Mobile Menu (Dropdown) */}
+				<div className='md:hidden'>
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button variant='ghost' size='icon'>
+								<Menu className='w-6 h-6' />
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align='end'>
+							{['home', 'users', 'public', 'contacts'].map(
+								(section) => (
+									<DropdownMenuItem
+										key={section}
+										onClick={() => scrollToSection(section)}
+									>
+										{section.charAt(0).toUpperCase() +
+											section.slice(1)}
+									</DropdownMenuItem>
+								)
+							)}
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</div>
 			</div>
 		</nav>
 	);
 };
 
-export default NavBar;
+export default Navbar;
