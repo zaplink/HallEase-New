@@ -1,88 +1,121 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import SidebarLayout from '@/layouts/Sidebar/Layout';
-import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
-import ChangePasswordForm from '@/components/ui/ChangePasswordForm';
 import { useProfile } from '@/hooks/useProfile';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 export default function Profile() {
-	const { profile, loading } = useProfile();
-	return (
-		// Sidebar layout
-		<SidebarLayout>
-			<div
-				style={{
-					justifyContent: 'space-between',
-					alignItems: 'flex-start',
+	// const { profile, loading } = useProfile();
+	const { profile } = useProfile();
 
-					padding: '20px',
-					width: '80vw',
-					display: 'flex',
-				}}
-			>
-				<div style={{ width: '50vw', marginRight: '10px' }}>
-					<Table
-						style={{ borderCollapse: 'collapse', fontSize: '15px' }}
-					>
-						<TableBody>
-							<TableRow>
-								<TableCell className='font-medium'>
-									User ID
-								</TableCell>
-								<TableCell className='text-left'>
-									1002
-								</TableCell>
-							</TableRow>
-							<TableRow>
-								<TableCell className='font-medium'>
-									User Name
-								</TableCell>
-								<TableCell className='text-left'>
-									{loading
-										? loading
-										: profile
-											? profile.full_name
-											: 'User not found'}
-								</TableCell>
-							</TableRow>
-							<TableRow>
-								<TableCell className='font-medium'>
-									Email
-								</TableCell>
-								<TableCell className='text-left'>
-									exampl@domain.com
-								</TableCell>
-							</TableRow>
-							<TableRow>
-								<TableCell className='font-medium'>
-									Phone
-								</TableCell>
-								<TableCell className='text-left'>
-									0123456789
-								</TableCell>
-							</TableRow>
-							<TableRow>
-								<TableCell className='font-medium'>
-									Role
-								</TableCell>
-								<TableCell className='text-left'>
-									Hall Manager
-								</TableCell>
-							</TableRow>
-							<TableRow>
-								<TableCell className='font-medium'>
-									Permissions
-								</TableCell>
-								<TableCell className='text-left'>
-									approve/reject bookingsadd new halls
-								</TableCell>
-							</TableRow>
-						</TableBody>
-					</Table>
+	// State for form fields
+	const [name, setName] = useState('');
+	const [email, setEmail] = useState('');
+	const [oldPassword, setOldPassword] = useState('');
+	const [newPassword, setNewPassword] = useState('');
+	const [confirmPassword, setConfirmPassword] = useState('');
+
+	// Update state when profile data is available
+	useEffect(() => {
+		if (profile) {
+			setName(profile.full_name || '');
+			setEmail(profile.email || '');
+		}
+	}, [profile]);
+
+	// Handle profile update (dummy function)
+	const handleProfileUpdate = () => {
+		console.log('Updating profile:', { name, email });
+		// Add API call here if needed
+	};
+
+	// Handle password change (dummy function)
+	const handleChangePassword = () => {
+		console.log('Changing password:', {
+			oldPassword,
+			newPassword,
+			confirmPassword,
+		});
+		// Add API call here if needed
+	};
+
+	return (
+		<SidebarLayout>
+			<div className='pl-2 pt-4'>
+				{/* Profile Section */}
+				<Label className='font-bold text-xl'>Profile Information</Label>
+				<Separator className='my-3' />
+
+				<div className='my-6'>
+					<Label className='font-semibold mb-1'>Name</Label>
+					<Input
+						value={name}
+						onChange={(e) => setName(e.target.value)}
+						className='w-2/5'
+					/>
 				</div>
 
-				<div style={{ width: '50vw' }}>
-					<ChangePasswordForm />
+				<div className='my-6'>
+					<Label className='font-semibold mb-1'>Email</Label>
+					<Input
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+						className='w-2/5'
+					/>
+				</div>
+
+				<div className='my-6'>
+					<Button variant='default' onClick={handleProfileUpdate}>
+						Update Profile
+					</Button>
+				</div>
+
+				{/* Password Section */}
+				<Label className='font-bold text-xl'>
+					Password & Authentication
+				</Label>
+				<Separator className='my-3' />
+
+				<div className='my-6'>
+					<Label className='font-semibold mb-1'>Old Password</Label>
+					<Input
+						type='password'
+						value={oldPassword}
+						onChange={(e) => setOldPassword(e.target.value)}
+						className='w-2/5'
+					/>
+				</div>
+
+				<div className='my-6'>
+					<Label className='font-semibold mb-1'>New Password</Label>
+					<Input
+						type='password'
+						value={newPassword}
+						onChange={(e) => setNewPassword(e.target.value)}
+						className='w-2/5'
+					/>
+				</div>
+
+				<div className='my-6'>
+					<Label className='font-semibold mb-1'>
+						Re-enter New Password
+					</Label>
+					<Input
+						type='password'
+						value={confirmPassword}
+						onChange={(e) => setConfirmPassword(e.target.value)}
+						className='w-2/5'
+					/>
+				</div>
+
+				<div className='my-6'>
+					<Button variant='default' onClick={handleChangePassword}>
+						Change Password
+					</Button>
 				</div>
 			</div>
 		</SidebarLayout>
