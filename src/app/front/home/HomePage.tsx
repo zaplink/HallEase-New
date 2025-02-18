@@ -38,8 +38,9 @@ const HomePage = () => {
 						</span>
 					</h1>
 					<p className='text-white text-lg md:text-2xl mt-4 leading-relaxed'>
-						<span className='font-bold'>
-							Seamlessly manage faculty halls with ease.
+						<span className='font-bold text-3xl'>
+							&quot;Seamlessly manage faculty halls with
+							ease.&quot;
 						</span>
 						<br />
 						From hall allocations to user access, HallEase
