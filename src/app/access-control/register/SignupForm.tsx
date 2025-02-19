@@ -1,9 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-
 import { Button } from '@/components/ui/button';
 import {
 	Form,
@@ -14,6 +14,14 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { signup } from '@/lib/SignupActions';
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+} from '@/components/ui/dialog';
+import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
 	username: z.string().min(3, {
@@ -33,106 +41,150 @@ const formSchema = z.object({
 });
 
 export default function SignupForm() {
-	// 1. Define your form.
+	const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+	const [errorMessage, setErrorMessage] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			username: '',
 			email: '',
+			phone: '',
+			password: '',
 		},
 	});
 
-	// 2. Define a submit handler.
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		console.log(values);
+	async function onSubmit(values: z.infer<typeof formSchema>) {
+		const formData = new FormData();
+		formData.append('username', values.username);
+		formData.append('email', values.email);
+		formData.append('phone', values.phone);
+		formData.append('password', values.password);
+
+		setIsLoading(true);
+		const result = await signup(formData);
+
+		if (result.success) {
+			setShowSuccessPopup(true);
+		} else {
+			setErrorMessage(result.message);
+		}
 	}
 
 	return (
-		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-				{/* form fields  */}
-				<FormField
-					control={form.control}
-					name='username'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel className='font-semibold mb-1'>
-								Username
-							</FormLabel>
-							<FormControl>
-								<Input
-									type='text'
-									placeholder="This is user's public display name"
-									{...field}
-								/>
-							</FormControl>
+		<>
+			<Form {...form}>
+				<form
+					onSubmit={form.handleSubmit(onSubmit)}
+					className='space-y-8'
+				>
+					<FormField
+						control={form.control}
+						name='username'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Username</FormLabel>
+								<FormControl>
+									<Input
+										type='text'
+										placeholder='Enter username'
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+					<FormField
+						control={form.control}
+						name='email'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Email</FormLabel>
+								<FormControl>
+									<Input
+										type='email'
+										placeholder='Enter email'
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
-				<FormField
-					control={form.control}
-					name='email'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel className='font-semibold mb-1'>
-								Email
-							</FormLabel>
-							<FormControl>
-								<Input
-									type='email'
-									placeholder="Enter user's email address"
-									{...field}
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+					<FormField
+						control={form.control}
+						name='phone'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Phone Number</FormLabel>
+								<FormControl>
+									<Input
+										type='tel'
+										placeholder='Enter phone number'
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
-				<FormField
-					control={form.control}
-					name='phone'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel className='font-semibold mb-1'>
-								Phone Number
-							</FormLabel>
-							<FormControl>
-								<Input
-									type='tel'
-									placeholder="Enter user's phone number"
-									{...field}
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+					<FormField
+						control={form.control}
+						name='password'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Password</FormLabel>
+								<FormControl>
+									<Input
+										type='password'
+										placeholder='Enter password'
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
-				<FormField
-					control={form.control}
-					name='password'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel className='font-semibold mb-1'>
-								Password
-							</FormLabel>
-							<FormControl>
-								<Input
-									type='password'
-									placeholder='Give a password for new user'
-									{...field}
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
+					{errorMessage && (
+						<p className='text-red-500'>{errorMessage}</p>
 					)}
-				/>
-				<Button type='submit'>Register</Button>
-			</form>
-		</Form>
+
+					<Button type='submit' disabled={isLoading}>
+						{isLoading ? (
+							<>
+								<Loader2 className='animate-spin w-5 h-5' />{' '}
+								<span>Registering...</span>
+							</>
+						) : (
+							'Register'
+						)}
+					</Button>
+				</form>
+			</Form>
+
+			{/* Success Popup */}
+			<Dialog open={showSuccessPopup} onOpenChange={setShowSuccessPopup}>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Invitation Sent</DialogTitle>
+					</DialogHeader>
+					<p>An invitation has been sent to the provided email</p>
+					<Button
+						onClick={() => {
+							setShowSuccessPopup(false);
+							window.location.reload();
+						}}
+					>
+						OK
+					</Button>
+				</DialogContent>
+			</Dialog>
+		</>
 	);
 }
