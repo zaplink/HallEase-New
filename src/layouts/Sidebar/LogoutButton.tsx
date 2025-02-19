@@ -8,7 +8,7 @@ import {
 	DialogClose,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { logout } from '@/app/login/logoutAction';
+import { logout } from '@/lib/logoutAction';
 import { DialogTitle } from '@radix-ui/react-dialog';
 
 export default function LogoutButton() {
