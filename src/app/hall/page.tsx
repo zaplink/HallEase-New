@@ -11,6 +11,7 @@ import {
 	TableCell,
 } from '@/components/ui/table';
 import useHalls from '@/hooks/useHalls';
+import ProtectedPage from '../../layouts/ProtectedPage';
 
 export default function Hall() {
 	const { halls, loading, error } = useHalls();
@@ -33,37 +34,38 @@ export default function Hall() {
 		);
 	return (
 		// Sidebar layout
-		<SidebarLayout>
-			<div className='mb-6 flex flex-row'>
-				{/* Search halls */}
-				<Input placeholder='Search Halls' />
-			</div>
+		<ProtectedPage>
+			<SidebarLayout>
+				<div className='mb-6 flex flex-row'>
+					{/* Search halls */}
+					<Input placeholder='Search Halls' />
+				</div>
 
-			{/* Table */}
-			<Table>
-				<TableHeader>
-					<TableRow>
-						<TableHead>Hall ID</TableHead>
-						<TableHead>Type</TableHead>
-						<TableHead>Capacity</TableHead>
-						<TableHead>Availability</TableHead>
-						<TableHead>Recent Activity</TableHead>
-						<TableHead>Recent Activity Type</TableHead>
-					</TableRow>
-				</TableHeader>
-				<TableBody>
-					{halls.map((hall) => (
-						<TableRow key={hall.id}>
-							<TableCell>{hall.room}</TableCell>
-							<TableCell>{hall.type}</TableCell>
-							<TableCell>{hall.capacity}</TableCell>
-							<TableCell>Testing</TableCell>
-							<TableCell>Testing</TableCell>
-							<TableCell>Testing</TableCell>
+				{/* Table */}
+				<Table>
+					<TableHeader>
+						<TableRow>
+							<TableHead>Hall ID</TableHead>
+							<TableHead>Type</TableHead>
+							<TableHead>Capacity</TableHead>
+							<TableHead>Availability</TableHead>
+							<TableHead>Recent Activity</TableHead>
+							<TableHead>Recent Activity Type</TableHead>
 						</TableRow>
-					))}
+					</TableHeader>
+					<TableBody>
+						{halls.map((hall) => (
+							<TableRow key={hall.id}>
+								<TableCell>{hall.room}</TableCell>
+								<TableCell>{hall.type}</TableCell>
+								<TableCell>{hall.capacity}</TableCell>
+								<TableCell>Testing</TableCell>
+								<TableCell>Testing</TableCell>
+								<TableCell>Testing</TableCell>
+							</TableRow>
+						))}
 
-					{/* <TableRow>
+						{/* <TableRow>
 						<TableCell>LAB-03</TableCell>
 						<TableCell>Lab</TableCell>
 						<TableCell>75</TableCell>
@@ -71,8 +73,9 @@ export default function Hall() {
 						<TableCell>In 7 days</TableCell>
 						<TableCell>Session</TableCell>
 					</TableRow> */}
-				</TableBody>
-			</Table>
-		</SidebarLayout>
+					</TableBody>
+				</Table>
+			</SidebarLayout>
+		</ProtectedPage>
 	);
 }

@@ -27,7 +27,7 @@ import {
 
 // import { Label } from "@/components/ui/label";
 import { BsFillQuestionCircleFill } from 'react-icons/bs';
-import { login } from './actions';
+import { login } from '../../lib/LoginActions';
 import { useState } from 'react';
 import { Loader } from 'lucide-react';
 

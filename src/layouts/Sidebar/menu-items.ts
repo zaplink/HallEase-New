@@ -16,6 +16,8 @@ import {
 	Flag,
 	ChartNoAxesCombined,
 	FileChartColumn,
+	UserPlus,
+	ContactRound,
 } from 'lucide-react';
 
 export interface SubMenuItem {
@@ -141,6 +143,19 @@ const sidebarMenu = [
 				itemTitle: 'Access Control',
 				itemUrl: '/access-control',
 				itemIcon: UserCog,
+				subMenu: [
+					{
+						subTitle: 'User Registration',
+						subUrl: '/access-control/register',
+						subIcon: UserPlus,
+					},
+
+					{
+						subTitle: 'User Details',
+						subUrl: '/access-control/details',
+						subIcon: ContactRound,
+					},
+				],
 			},
 		],
 	},
