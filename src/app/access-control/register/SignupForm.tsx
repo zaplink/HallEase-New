@@ -3,7 +3,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-
 import { Button } from '@/components/ui/button';
 import {
 	Form,
@@ -14,6 +13,7 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { signup } from '@/lib/SignupActions';
 
 const formSchema = z.object({
 	username: z.string().min(3, {
@@ -33,24 +33,29 @@ const formSchema = z.object({
 });
 
 export default function SignupForm() {
-	// 1. Define your form.
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			username: '',
 			email: '',
+			phone: '',
+			password: '',
 		},
 	});
 
-	// 2. Define a submit handler.
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		console.log(values);
+	async function onSubmit(values: z.infer<typeof formSchema>) {
+		const formData = new FormData();
+		formData.append('username', values.username);
+		formData.append('email', values.email);
+		formData.append('phone', values.phone);
+		formData.append('password', values.password);
+
+		await signup(formData);
 	}
 
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-				{/* form fields  */}
 				<FormField
 					control={form.control}
 					name='username'
@@ -62,11 +67,10 @@ export default function SignupForm() {
 							<FormControl>
 								<Input
 									type='text'
-									placeholder="This is user's public display name"
+									placeholder="User's public display name"
 									{...field}
 								/>
 							</FormControl>
-
 							<FormMessage />
 						</FormItem>
 					)}
@@ -83,7 +87,7 @@ export default function SignupForm() {
 							<FormControl>
 								<Input
 									type='email'
-									placeholder="Enter user's email address"
+									placeholder="User's email address"
 									{...field}
 								/>
 							</FormControl>
@@ -103,7 +107,7 @@ export default function SignupForm() {
 							<FormControl>
 								<Input
 									type='tel'
-									placeholder="Enter user's phone number"
+									placeholder="User's phone number"
 									{...field}
 								/>
 							</FormControl>
@@ -123,7 +127,7 @@ export default function SignupForm() {
 							<FormControl>
 								<Input
 									type='password'
-									placeholder='Give a password for new user'
+									placeholder='Set a password for the user'
 									{...field}
 								/>
 							</FormControl>

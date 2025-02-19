@@ -9,11 +9,17 @@ export async function signup(formData: FormData) {
 	const supabase = await createClient();
 
 	// type-casting here for convenience
-	// in practice, you should validate your inputs
 	const data = {
 		email: formData.get('email') as string,
 		password: formData.get('password') as string,
+		phone: formData.get('phone') as string,
+		username: formData.get('username') as string,
 	};
+
+	// Handle missing fields properly
+	if (!data.username || !data.email || !data.phone || !data.password) {
+		redirect('/error');
+	}
 
 	const { error } = await supabase.auth.signUp(data);
 
@@ -21,6 +27,8 @@ export async function signup(formData: FormData) {
 		redirect('/error');
 	}
 
+	await supabase.from('users').insert(data);
+
 	revalidatePath('/', 'layout');
-	redirect('/access-control/register');
+	redirect('/dashboard');
 }
