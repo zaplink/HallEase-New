@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -14,6 +15,12 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { signup } from '@/lib/SignupActions';
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+} from '@/components/ui/dialog';
 
 const formSchema = z.object({
 	username: z.string().min(3, {
@@ -33,6 +40,9 @@ const formSchema = z.object({
 });
 
 export default function SignupForm() {
+	const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+	const [errorMessage, setErrorMessage] = useState('');
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -50,93 +60,119 @@ export default function SignupForm() {
 		formData.append('phone', values.phone);
 		formData.append('password', values.password);
 
-		await signup(formData);
+		const result = await signup(formData);
+
+		if (result.success) {
+			setShowSuccessPopup(true);
+		} else {
+			setErrorMessage(result.message);
+		}
 	}
 
 	return (
-		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-				<FormField
-					control={form.control}
-					name='username'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel className='font-semibold mb-1'>
-								Username
-							</FormLabel>
-							<FormControl>
-								<Input
-									type='text'
-									placeholder="User's public display name"
-									{...field}
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+		<>
+			<Form {...form}>
+				<form
+					onSubmit={form.handleSubmit(onSubmit)}
+					className='space-y-8'
+				>
+					<FormField
+						control={form.control}
+						name='username'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Username</FormLabel>
+								<FormControl>
+									<Input
+										type='text'
+										placeholder='Enter username'
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
-				<FormField
-					control={form.control}
-					name='email'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel className='font-semibold mb-1'>
-								Email
-							</FormLabel>
-							<FormControl>
-								<Input
-									type='email'
-									placeholder="User's email address"
-									{...field}
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+					<FormField
+						control={form.control}
+						name='email'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Email</FormLabel>
+								<FormControl>
+									<Input
+										type='email'
+										placeholder='Enter email'
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
-				<FormField
-					control={form.control}
-					name='phone'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel className='font-semibold mb-1'>
-								Phone Number
-							</FormLabel>
-							<FormControl>
-								<Input
-									type='tel'
-									placeholder="User's phone number"
-									{...field}
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+					<FormField
+						control={form.control}
+						name='phone'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Phone Number</FormLabel>
+								<FormControl>
+									<Input
+										type='tel'
+										placeholder='Enter phone number'
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
-				<FormField
-					control={form.control}
-					name='password'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel className='font-semibold mb-1'>
-								Password
-							</FormLabel>
-							<FormControl>
-								<Input
-									type='password'
-									placeholder='Set a password for the user'
-									{...field}
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
+					<FormField
+						control={form.control}
+						name='password'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Password</FormLabel>
+								<FormControl>
+									<Input
+										type='password'
+										placeholder='Enter password'
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					{errorMessage && (
+						<p className='text-red-500'>{errorMessage}</p>
 					)}
-				/>
-				<Button type='submit'>Register</Button>
-			</form>
-		</Form>
+
+					<Button type='submit'>Register</Button>
+				</form>
+			</Form>
+
+			{/* Success Popup */}
+			<Dialog open={showSuccessPopup} onOpenChange={setShowSuccessPopup}>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Invitation Sent</DialogTitle>
+					</DialogHeader>
+					<p>An invitation has been sent to the provided email.</p>
+					<Button
+						onClick={() => {
+							setShowSuccessPopup(false);
+							window.location.reload();
+						}}
+					>
+						OK
+					</Button>
+				</DialogContent>
+			</Dialog>
+		</>
 	);
 }

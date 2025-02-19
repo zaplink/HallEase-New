@@ -1,6 +1,5 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { createClient } from '@/lib/supabaseServer';
@@ -29,6 +28,6 @@ export async function signup(formData: FormData) {
 
 	await supabase.from('users').insert(data);
 
-	revalidatePath('/', 'layout');
-	redirect('/dashboard');
+	// return success instead of redirecting
+	return { success: true, message: 'Invitation sent to user email.' };
 }
