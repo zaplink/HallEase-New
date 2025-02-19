@@ -23,11 +23,9 @@ const formSchema = z.object({
 		.string()
 		.email({ message: 'Please enter a valid email address.' })
 		.transform((value) => value.trim()),
-	phone: z
-		.string()
-		.regex(/^\d{10,15}$/, {
-			message: 'Please enter a valid phone number.',
-		}),
+	phone: z.string().regex(/^\d{10,15}$/, {
+		message: 'Please enter a valid phone number.',
+	}),
 	password: z
 		.string()
 		.min(6, { message: 'Password must be at least 6 characters long.' })
@@ -58,9 +56,12 @@ export default function SignupForm() {
 					name='username'
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Username</FormLabel>
+							<FormLabel className='font-semibold mb-1'>
+								Username
+							</FormLabel>
 							<FormControl>
 								<Input
+									type='text'
 									placeholder="This is user's public display name"
 									{...field}
 								/>
@@ -76,9 +77,12 @@ export default function SignupForm() {
 					name='email'
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Email</FormLabel>
+							<FormLabel className='font-semibold mb-1'>
+								Email
+							</FormLabel>
 							<FormControl>
 								<Input
+									type='email'
 									placeholder="Enter user's email address"
 									{...field}
 								/>
@@ -93,9 +97,12 @@ export default function SignupForm() {
 					name='phone'
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Phone Number</FormLabel>
+							<FormLabel className='font-semibold mb-1'>
+								Phone Number
+							</FormLabel>
 							<FormControl>
 								<Input
+									type='tel'
 									placeholder="Enter user's phone number"
 									{...field}
 								/>
@@ -110,9 +117,12 @@ export default function SignupForm() {
 					name='password'
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Password</FormLabel>
+							<FormLabel className='font-semibold mb-1'>
+								Password
+							</FormLabel>
 							<FormControl>
 								<Input
+									type='password'
 									placeholder='Give a password for new user'
 									{...field}
 								/>
