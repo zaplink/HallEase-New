@@ -2,7 +2,7 @@
 import { Combobox } from '../combobox';
 import { DatePickerDemo } from './DatePicker';
 import { useForm } from 'react-hook-form';
-import '@/app/bookingnewstyle.css';
+// import '@/app/bookingnewstyle.css';
 
 import {
 	Form,
@@ -65,28 +65,22 @@ function BookingFormNew() {
 
 	return (
 		<Form {...form}>
-			<form
-				onSubmit={form.handleSubmit(onSubmit)}
-				className='space-y-4 p-4'
-			>
-				<h1 className='title'>Hall Booking Form</h1>
-				<p className='para'>
-					Submit key details for your event to complete your booking
-					efficiently.
-				</p>
+			<form onSubmit={form.handleSubmit(onSubmit)}>
 				{/* Name Field */}
 				<FormField
 					control={form.control}
 					name='name'
 					rules={{ required: 'Please Enter your event Name' }}
 					render={({ field }) => (
-						<FormItem className='form-item'>
-							<FormLabel>Name</FormLabel>
+						<FormItem className='form-item mb-6'>
+							<FormLabel className='font-semibold'>
+								Name
+							</FormLabel>
 							<FormControl>
 								<Input
 									{...field}
 									placeholder='Dream Big 2025 Conference'
-									className='input'
+									className='input w-2/5'
 								/>
 							</FormControl>
 							<FormMessage />
@@ -99,8 +93,11 @@ function BookingFormNew() {
 					name='eventtype'
 					rules={{ required: 'Please Select your event Type' }}
 					render={({ field }) => (
-						<FormItem className='form-item'>
-							<FormLabel>Event Type</FormLabel>
+						<FormItem className='form-item flex flex-col mb-6'>
+							<FormLabel className='font-semibold'>
+								Event Type
+							</FormLabel>
+
 							<FormControl>
 								<Combobox
 									options={eventType}
@@ -111,6 +108,7 @@ function BookingFormNew() {
 									}
 								/>
 							</FormControl>
+
 							<FormMessage />
 						</FormItem>
 					)}
@@ -121,13 +119,15 @@ function BookingFormNew() {
 					name='organizedby'
 					rules={{ required: 'Please Enter  Organization ' }}
 					render={({ field }) => (
-						<FormItem className='form-item'>
-							<FormLabel>Organized By</FormLabel>
+						<FormItem className='form-item mb-6'>
+							<FormLabel className='font-semibold'>
+								Organized By
+							</FormLabel>
 							<FormControl>
 								<Input
 									{...field}
 									placeholder='Innovative Society'
-									className='input'
+									className='input w-2/5'
 								/>
 							</FormControl>
 							<FormMessage />
@@ -140,8 +140,10 @@ function BookingFormNew() {
 					name='eventdescription'
 					rules={{ required: 'Please Enter  event Description' }}
 					render={({ field }) => (
-						<FormItem className='form-item'>
-							<FormLabel>Event Description</FormLabel>
+						<FormItem className='form-item mb-6'>
+							<FormLabel className='font-semibold'>
+								Event Description
+							</FormLabel>
 							<FormControl>
 								<Input
 									{...field}
@@ -159,13 +161,15 @@ function BookingFormNew() {
 					name='attendance'
 					rules={{ required: 'Please Enter Number of attendance' }}
 					render={({ field }) => (
-						<FormItem className='form-item'>
-							<FormLabel>Number of Attendance</FormLabel>
+						<FormItem className='form-item mb-6'>
+							<FormLabel className='font-semibold'>
+								Number of Attendance
+							</FormLabel>
 							<FormControl>
 								<Input
 									{...field}
 									placeholder='100'
-									className='input'
+									className='input w-2/5'
 								/>
 							</FormControl>
 							<FormMessage />
@@ -178,8 +182,10 @@ function BookingFormNew() {
 					name='date'
 					rules={{ required: 'please select the date' }}
 					render={({ field }) => (
-						<FormItem className='form-item'>
-							<FormLabel>Date</FormLabel>
+						<FormItem className='form-item mb-6 flex flex-col'>
+							<FormLabel className='font-semibold'>
+								Date
+							</FormLabel>
 							<FormControl>
 								<DatePickerDemo
 									value={field.value}
@@ -197,13 +203,15 @@ function BookingFormNew() {
 					name='starttime'
 					rules={{ required: 'Please Enter Start Time' }}
 					render={({ field }) => (
-						<FormItem className='form-item'>
-							<FormLabel>Start Time</FormLabel>
+						<FormItem className='form-item mb-6'>
+							<FormLabel className='font-semibold'>
+								Start Time
+							</FormLabel>
 							<FormControl>
 								<Input
 									{...field}
 									placeholder='10.30 am'
-									className='input'
+									className='input w-2/5'
 								/>
 							</FormControl>
 							<FormMessage />
@@ -216,13 +224,15 @@ function BookingFormNew() {
 					name='endtime'
 					rules={{ required: 'Please Enter End time' }}
 					render={({ field }) => (
-						<FormItem className='form-item'>
-							<FormLabel>End Time</FormLabel>
+						<FormItem className='form-item mb-6'>
+							<FormLabel className='font-semibold'>
+								End Time
+							</FormLabel>
 							<FormControl>
 								<Input
 									{...field}
 									placeholder='1.00 pm'
-									className='input'
+									className='input w-2/5'
 								/>
 							</FormControl>
 							<FormMessage />
@@ -235,8 +245,10 @@ function BookingFormNew() {
 					name='halllocation'
 					rules={{ required: 'Please Select your Hall/location' }}
 					render={({ field }) => (
-						<FormItem className='form-item'>
-							<FormLabel>Hall/Location</FormLabel>
+						<FormItem className='form-item mb-6 flex flex-col'>
+							<FormLabel className='font-semibold'>
+								Hall/Location
+							</FormLabel>
 							<FormControl>
 								<Combobox
 									options={hallOptions}
@@ -264,13 +276,16 @@ function BookingFormNew() {
 						},
 					}}
 					render={({ field }) => (
-						<FormItem className='form-item'>
-							<FormLabel> Contact Email</FormLabel>
+						<FormItem className='form-item mb-6'>
+							<FormLabel className='font-semibold'>
+								{' '}
+								Contact Email
+							</FormLabel>
 							<FormControl>
 								<Input
 									{...field}
 									placeholder='example@domain.com'
-									className='input'
+									className='input w-2/5'
 								/>
 							</FormControl>
 							<FormMessage />
@@ -279,9 +294,9 @@ function BookingFormNew() {
 				/>
 
 				{/* Submit Button */}
-				<div>
+				<div className='flex flex-row gap-4'>
 					<Button type='submit' className='but'>
-						Submit
+						Submit Booking
 					</Button>
 
 					<Button
@@ -289,7 +304,7 @@ function BookingFormNew() {
 						className='reset'
 						onClick={() => form.reset()}
 					>
-						Reset
+						Reset Form
 					</Button>
 				</div>
 			</form>
