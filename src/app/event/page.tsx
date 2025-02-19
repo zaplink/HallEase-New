@@ -10,10 +10,17 @@ import {
 } from '@/components/ui/table';
 
 import { FaInfoCircle } from 'react-icons/fa';
-
 import clsx from 'clsx';
+import { createClient } from '@/lib/supabaseServer';
+import { redirect } from 'next/navigation';
 
-export default function Event() {
+export default async function Event() {
+	const supabase = await createClient();
+	const { data, error } = await supabase.auth.getUser();
+	if (error || !data?.user) {
+		redirect('/login');
+	}
+
 	return (
 		<SidebarLayout>
 			<div
