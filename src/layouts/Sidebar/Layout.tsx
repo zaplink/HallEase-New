@@ -1,7 +1,6 @@
 'use client';
 
 import {
-	LogOut,
 	ChevronDown,
 	ChevronRight,
 	BotMessageSquare,
@@ -37,7 +36,6 @@ import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { Calendar } from '@/components/ui/calendar';
 import { getBaseUrl } from '@/utils/getBaseUrl';
-import { logout } from '@/app/login/logoutAction';
 import {
 	Collapsible,
 	CollapsibleTrigger,
@@ -56,6 +54,7 @@ import {
 import { format } from 'date-fns';
 import sidebarMenu from '@/layouts/Sidebar/menu-items';
 import { Skeleton } from '@/components/ui/skeleton';
+import LogoutButton from './LogoutButton';
 
 type SidebarLayoutProps = Readonly<{
 	children: React.ReactNode;
@@ -346,18 +345,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 						<SidebarMenuItem>
 							<SidebarMenuButton asChild>
 								{/* logout button  */}
-								<button
-									onClick={async () => {
-										await logout(); // Trigger the logoutAction
-									}}
-									className='flex flex-row justify-left items-center'
-								>
-									<LogOut
-										size={20}
-										className='mr-1 text-red-500'
-									/>
-									<span className='text-red-500'>Logout</span>
-								</button>
+								<LogoutButton />
 							</SidebarMenuButton>
 						</SidebarMenuItem>
 					</SidebarMenu>
