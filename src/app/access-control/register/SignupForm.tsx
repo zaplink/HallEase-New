@@ -21,6 +21,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/components/ui/dialog';
+import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
 	username: z.string().min(3, {
@@ -42,6 +43,7 @@ const formSchema = z.object({
 export default function SignupForm() {
 	const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 	const [errorMessage, setErrorMessage] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -60,6 +62,7 @@ export default function SignupForm() {
 		formData.append('phone', values.phone);
 		formData.append('password', values.password);
 
+		setIsLoading(true);
 		const result = await signup(formData);
 
 		if (result.success) {
@@ -152,7 +155,16 @@ export default function SignupForm() {
 						<p className='text-red-500'>{errorMessage}</p>
 					)}
 
-					<Button type='submit'>Register</Button>
+					<Button type='submit' disabled={isLoading}>
+						{isLoading ? (
+							<>
+								<Loader2 className='animate-spin w-5 h-5' />{' '}
+								<span>Registering...</span>
+							</>
+						) : (
+							'Register'
+						)}
+					</Button>
 				</form>
 			</Form>
 
@@ -162,7 +174,7 @@ export default function SignupForm() {
 					<DialogHeader>
 						<DialogTitle>Invitation Sent</DialogTitle>
 					</DialogHeader>
-					<p>An invitation has been sent to the provided email.</p>
+					<p>An invitation has been sent to the provided email</p>
 					<Button
 						onClick={() => {
 							setShowSuccessPopup(false);
