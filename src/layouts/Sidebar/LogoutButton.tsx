@@ -40,9 +40,9 @@ export default function LogoutButton() {
 				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>
-							<h2 className='text-lg font-semibold'>
+							<span className='text-lg font-semibold'>
 								Confirm Logout
-							</h2>
+							</span>
 						</DialogTitle>
 						<p className='text-sm text-gray-500'>
 							Are you sure you want to log out?
