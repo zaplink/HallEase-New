@@ -183,7 +183,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 								href={baseUrl + '/profile'}
 								className='flex flex-row justify-left'
 							>
-								<SidebarMenuButton className='h-auto p-0 m-2'>
+								<SidebarMenuButton className='h-auto p-0 my-2 mx-1'>
 									{getAvatar()}
 								</SidebarMenuButton>
 							</Link>
