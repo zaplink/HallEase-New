@@ -96,7 +96,7 @@ const sidebarMenu = [
 			},
 			{
 				itemTitle: 'Hall Facilities',
-				itemUrl: '/hall',
+				itemUrl: '/halls',
 				itemIcon: Building2,
 			},
 		],
