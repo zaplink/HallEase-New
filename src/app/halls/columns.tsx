@@ -1,7 +1,7 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { Hall as HallType } from './hall';
+import { Hall as HallType } from '@/types/hall';
 
 import { Button } from '@/components/ui/button';
 import {
