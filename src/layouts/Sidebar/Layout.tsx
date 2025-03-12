@@ -55,6 +55,7 @@ import { format } from 'date-fns';
 import sidebarMenu from '@/layouts/Sidebar/menu-items';
 import { Skeleton } from '@/components/ui/skeleton';
 import LogoutButton from './LogoutButton';
+import { Toaster } from '@/components/ui/sonner';
 
 type SidebarLayoutProps = Readonly<{
 	children: React.ReactNode;
@@ -422,7 +423,10 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 				<Separator />
 
 				{/* Put page content here*/}
-				<div className='px-2 pt-2 flex flex-col h-full'>{children}</div>
+				<main className='px-2 pt-2 flex flex-col h-full'>
+					{children}
+				</main>
+				<Toaster />
 			</div>
 		</SidebarProvider>
 	);
