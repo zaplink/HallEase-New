@@ -25,7 +25,7 @@ export default function Hall() {
 		// Sidebar layout
 		<ProtectedPage>
 			<SidebarLayout>
-				<div className='container mx-auto py-10'>
+				<div className='container mx-auto'>
 					{halls === null ? (
 						<p>Loading halls...</p>
 					) : (
