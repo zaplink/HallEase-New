@@ -1,7 +1,7 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { Hall as HallType } from './hall';
+import { Hall as HallType } from '@/types/hall';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -15,6 +15,7 @@ import {
 
 import { MoreHorizontal, ArrowUpDown } from 'lucide-react';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 export const columns: ColumnDef<HallType>[] = [
 	{
@@ -53,6 +54,7 @@ export const columns: ColumnDef<HallType>[] = [
 		id: 'actions',
 		cell: ({ row }) => {
 			const hall = row.original;
+			const router = useRouter();
 
 			return (
 				<DropdownMenu>
@@ -74,7 +76,13 @@ export const columns: ColumnDef<HallType>[] = [
 						</DropdownMenuItem>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem>Book Hall</DropdownMenuItem>
-						<DropdownMenuItem>View Hall</DropdownMenuItem>
+						<DropdownMenuItem
+							onClick={() => {
+								router.push(`/hall/${hall.id}`);
+							}}
+						>
+							View Hall
+						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
 			);

@@ -423,7 +423,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 				<Separator />
 
 				{/* Put page content here*/}
-				<main className='px-2 pt-1 flex flex-col h-full'>
+				<main className='pt-1 flex flex-col h-full px-4'>
 					{children}
 				</main>
 				<Toaster />
