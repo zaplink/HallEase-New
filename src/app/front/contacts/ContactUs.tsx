@@ -1,11 +1,11 @@
 import React from 'react';
-import Contactform from '@/components/ui/contactform';
 import { FaFacebook } from 'react-icons/fa';
 import { FaFacebookMessenger } from 'react-icons/fa';
 import { FaInstagram } from 'react-icons/fa';
 import { FaTwitter } from 'react-icons/fa';
+import { ContactUs } from './contactform';
 
-const ContactUs = () => {
+const TestUs = () => {
 	return (
 		<div
 			id='contacts'
@@ -28,20 +28,14 @@ const ContactUs = () => {
 					height: '100%',
 				}}
 			>
-				<div className='container mx-auto p-20 bg-black bg-opacity-35 rounded'>
-					<h2 className='text-6xl font-bold text-white no-3 uppercase'>
-						Contact Us...
+				<div className='container mx-auto p-20 bg-black bg-opacity-35 rounded-3xl'>
+					<h2 className='text-6xl font-bold text-white no-3 uppercase mb-10'>
+						CONTACT & SUPPORT
 					</h2>
-					<p className='text-sm text-white w-full max-w-[750px]'>
-						Have questions or need assistance? We &apos;re here to
-						help! Feel free to reach out to us for any inquiries,
-						feedback, or support. Our team is always ready to assist
-						you with the best solutions. Simply fill out the form
-						below or connect with us on social media,We’d love to
-						hear from you!
-					</p>
-					<Contactform />
-					<footer className='mt-20 text-center text-white font-semibold text-sm'>
+
+					<ContactUs />
+
+					<footer className='mt-5 text-center text-white font-semibold text-sm'>
 						<div className='flex justify-center gap-5 mb-5'>
 							<a
 								href='#'
@@ -68,7 +62,9 @@ const ContactUs = () => {
 								<FaTwitter />
 							</a>
 						</div>
-						Copyright &copy; 2025-All Rights are Reserved.
+						Copyright &copy; {new Date().getFullYear()} - All Rights
+						are Reserved. <br />
+						Team ZapLink
 					</footer>
 				</div>
 			</div>
@@ -76,4 +72,4 @@ const ContactUs = () => {
 	);
 };
 
-export default ContactUs;
+export default TestUs;
