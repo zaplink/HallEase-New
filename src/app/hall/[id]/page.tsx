@@ -7,6 +7,12 @@ import SidebarLayout from '@/layouts/Sidebar/Layout';
 import { Hall as HallType } from '@/types/hall';
 import { getHall } from '@/lib/getHall';
 
+import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+
+import { Button } from '@/components/ui/button';
+
+import PageHeader from '@/components/custom/PageHeader';
+
 export default function Hall() {
 	const { id } = useParams<{ id: string }>();
 
@@ -41,9 +47,53 @@ export default function Hall() {
 
 	return (
 		<SidebarLayout>
-			<div>
-				<h1>ID: {hall.id}</h1>
-				<p>Capacity: {hall.capacity}</p>
+			<PageHeader
+				title={hall.id}
+				descriptions={[hall.type]}
+				extra={<Button>Book Hall</Button>}
+			></PageHeader>
+
+			<div className='flex flex-row justify-between gap-x-10'>
+				<div className='w-7/12 flex flex-row gap-x-10'>
+					<div className='w-1/2'>
+						<Table>
+							<TableBody>
+								<TableRow>
+									<TableCell className='font-medium'>
+										Capacity
+									</TableCell>
+									<TableCell>{hall.capacity}</TableCell>
+								</TableRow>
+								<TableRow>
+									<TableCell className='font-medium'>
+										Status
+									</TableCell>
+									<TableCell>{hall.status}</TableCell>
+								</TableRow>
+							</TableBody>
+						</Table>
+					</div>
+					<div className='w-1/2'>
+						<Table>
+							<TableBody>
+								<TableRow>
+									<TableCell className='font-medium'>
+										Energy Consumption
+									</TableCell>
+									<TableCell>5.5</TableCell>
+								</TableRow>
+								<TableRow>
+									<TableCell className='font-medium'>
+										Usage
+									</TableCell>
+									<TableCell>80%</TableCell>
+								</TableRow>
+							</TableBody>
+						</Table>
+					</div>
+				</div>
+
+				<div className='w-5/12 h-[300px] bg-gray-100 rounded-sm'></div>
 			</div>
 		</SidebarLayout>
 	);
