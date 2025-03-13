@@ -55,6 +55,7 @@ import { format } from 'date-fns';
 import sidebarMenu from '@/layouts/Sidebar/menu-items';
 import { Skeleton } from '@/components/ui/skeleton';
 import LogoutButton from './LogoutButton';
+import { Toaster } from '@/components/ui/sonner';
 
 type SidebarLayoutProps = Readonly<{
 	children: React.ReactNode;
@@ -183,7 +184,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 								href={baseUrl + '/profile'}
 								className='flex flex-row justify-left'
 							>
-								<SidebarMenuButton className='h-auto p-0 m-2'>
+								<SidebarMenuButton className='h-auto p-0 my-2 mx-1'>
 									{getAvatar()}
 								</SidebarMenuButton>
 							</Link>
@@ -422,7 +423,10 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 				<Separator />
 
 				{/* Put page content here*/}
-				<div className='px-2 pt-2 flex flex-col h-full'>{children}</div>
+				<main className='px-2 pt-1 flex flex-col h-full'>
+					{children}
+				</main>
+				<Toaster />
 			</div>
 		</SidebarProvider>
 	);
