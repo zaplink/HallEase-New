@@ -3,10 +3,10 @@
 import SidebarLayout from '@/layouts/Sidebar/Layout';
 import ProtectedPage from '../../layouts/ProtectedPage';
 
-import { Hall as HallType } from './hall';
+import { Hall as HallType } from '@/types/hall';
 import { columns } from './columns';
 import { DataTable } from './data-table';
-import { getHalls } from './getHalls';
+import { getHalls } from '@/lib/getHalls';
 import { useEffect, useState } from 'react';
 
 export default function Hall() {
