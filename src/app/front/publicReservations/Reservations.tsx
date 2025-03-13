@@ -1,10 +1,10 @@
 import React from 'react';
 // import ReservationForm from './ReservationForm';
-// import Image from 'next/image';
-// import { Button } from '@/components/ui/button';
-// import { Card, CardContent } from '@/components/ui/card';
-// import { Input } from '@/components/ui/input';
-// import { Label } from '@/components/ui/label';
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 const Reservations = () => {
 	return (
@@ -12,9 +12,9 @@ const Reservations = () => {
 			id='public'
 			className='min-h-screen flex items-center justify-center text-white relative bg-gradient-to-b from-blue-200 via-white to-gray-200'
 		>
-			{/* <div className='bg-white shadow-lg rounded-2xl overflow-hidden w-full max-w-7xl lg:h-[80vh] grid grid-cols-1 lg:grid-cols-2'> */}
-			{/* Left Section - Image */}
-			{/* <div className='relative h-100 lg:h-auto'>
+			<div className='bg-white shadow-lg rounded-2xl overflow-hidden w-full max-w-7xl lg:h-[80vh] grid grid-cols-1 lg:grid-cols-2'>
+				{/* Left Section - Image */}
+				<div className='relative h-100 lg:h-auto'>
 					<Image
 						src='/auditorium.jpg' // Change to your actual image path
 						alt='Signup'
@@ -22,10 +22,10 @@ const Reservations = () => {
 						objectFit='cover'
 						className='rounded-l-2xl'
 					/>
-				</div> */}
+				</div>
 
-			{/* Right Section - Signup Form */}
-			{/* <Card className='p-8'>
+				{/* Right Section - Signup Form */}
+				<Card className='p-8 rounded-none'>
 					<h2 className='text-2xl font-bold text-gray-800'>
 						Sign Up
 					</h2>
@@ -81,8 +81,8 @@ const Reservations = () => {
 							Already have an account
 						</Button>
 					</CardContent>
-				</Card> */}
-			{/* </div> */}
+				</Card>
+			</div>
 		</div>
 	);
 };
