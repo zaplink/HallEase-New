@@ -33,7 +33,7 @@ import {
 	BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar } from '@/components/ui/calendar';
 import { getBaseUrl } from '@/utils/getBaseUrl';
 import {
@@ -56,6 +56,11 @@ import sidebarMenu from '@/layouts/Sidebar/menu-items';
 import { Skeleton } from '@/components/ui/skeleton';
 import LogoutButton from './LogoutButton';
 import { Toaster } from '@/components/ui/sonner';
+
+import { fetchProfile } from '@/lib/fetchProfile';
+import { Profile as ProfileType } from '@/types/profile';
+import ProtectedComponent from '@/app/halls/ProtectedComponent';
+import { getUserPermissions } from '@/lib/auth';
 
 type SidebarLayoutProps = Readonly<{
 	children: React.ReactNode;
@@ -81,6 +86,26 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 	};
 
 	const { profile, loading } = useProfile();
+
+	const [user, setUser] = useState<ProfileType | null>(null);
+	const [permissions, setPermissions] = useState<string[]>([]);
+
+	useEffect(() => {
+		async function fetchUser() {
+			const profileData = await fetchProfile();
+			setUser(profileData);
+		}
+		fetchUser();
+	}, []);
+
+	useEffect(() => {
+		async function fetchPermissions() {
+			if (!user?.id) return;
+			const userPermissions = await getUserPermissions(user.id);
+			setPermissions(userPermissions);
+		}
+		fetchPermissions();
+	}, [user?.id]);
 
 	const findBreadcrumb = (path: string) => {
 		const breadcrumbs: { title: string; url: string }[] = [];
@@ -195,39 +220,151 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 				<Separator />
 
 				<SidebarContent>
-					{sidebarMenu.map((section) => (
-						<SidebarGroup key={section.sectionTitle}>
-							<SidebarGroupLabel>
-								{section.sectionTitle}
-							</SidebarGroupLabel>
-							<SidebarGroupContent>
-								<SidebarMenu>
-									{section.sectionMenu.map((item) => {
-										if (item.subMenu) {
-											const isOpen =
-												openSubMenu === item.itemTitle;
-											return (
-												<Collapsible
-													className='group/collapsible'
-													key={item.itemTitle}
-													open={isOpen}
-												>
+					{sidebarMenu.map((section) => {
+						// Filter out items based on role permissions
+						const filteredItems = section.sectionMenu.filter(
+							(item) =>
+								item.roleSlugs.some((role) =>
+									permissions.includes(role)
+								)
+						);
+
+						// If no items remain in the section, skip rendering
+						if (filteredItems.length === 0) return null;
+						return (
+							<SidebarGroup key={section.sectionTitle}>
+								<SidebarGroupLabel>
+									{section.sectionTitle}
+								</SidebarGroupLabel>
+								<SidebarGroupContent>
+									<SidebarMenu>
+										{filteredItems.map((item) => {
+											const hasPermission =
+												item.roleSlugs.some((role) =>
+													permissions.includes(role)
+												); // Check if user has required role
+
+											if (!hasPermission) return null;
+
+											if (item.subMenu) {
+												const isOpen =
+													openSubMenu ===
+													item.itemTitle;
+												return (
+													<Collapsible
+														className='group/collapsible'
+														key={item.itemTitle}
+														open={isOpen}
+													>
+														<SidebarMenuItem
+															key={item.itemTitle}
+														>
+															<CollapsibleTrigger
+																asChild
+															>
+																<SidebarMenuButton
+																	isActive={
+																		currentPath ==
+																		item.itemUrl
+																	}
+																	onClick={() =>
+																		toggleSubMenu(
+																			item.itemTitle
+																		)
+																	} // Toggle between open/close
+																>
+																	<item.itemIcon
+																		size={
+																			20
+																		}
+																		className='mr-1'
+																	/>
+																	<span>
+																		{
+																			item.itemTitle
+																		}
+																	</span>
+																	{isOpen ? (
+																		<ChevronDown
+																			className='ml-auto'
+																			size={
+																				16
+																			}
+																		/>
+																	) : (
+																		<ChevronRight
+																			className='ml-auto'
+																			size={
+																				16
+																			}
+																		/>
+																	)}
+																</SidebarMenuButton>
+															</CollapsibleTrigger>
+															<CollapsibleContent>
+																<SidebarMenuSub>
+																	{item.subMenu.map(
+																		(
+																			subItem
+																		) => (
+																			<SidebarMenuSubItem
+																				key={
+																					subItem.subTitle
+																				}
+																			>
+																				<SidebarMenuButton
+																					asChild
+																					isActive={
+																						currentPath ==
+																						subItem.subUrl
+																					}
+																				>
+																					<a
+																						href={
+																							baseUrl +
+																							subItem.subUrl
+																						}
+																						className='flex flex-row justify-left'
+																					>
+																						<subItem.subIcon
+																							size={
+																								20
+																							}
+																							className='mr-1'
+																						/>
+																						<span>
+																							{
+																								subItem.subTitle
+																							}
+																						</span>
+																					</a>
+																				</SidebarMenuButton>
+																			</SidebarMenuSubItem>
+																		)
+																	)}
+																</SidebarMenuSub>
+															</CollapsibleContent>
+														</SidebarMenuItem>
+													</Collapsible>
+												);
+											} else {
+												return (
 													<SidebarMenuItem
 														key={item.itemTitle}
 													>
-														<CollapsibleTrigger
+														<SidebarMenuButton
 															asChild
+															isActive={
+																currentPath ==
+																item.itemUrl
+															}
 														>
-															<SidebarMenuButton
-																isActive={
-																	currentPath ==
+															<a
+																href={
+																	baseUrl +
 																	item.itemUrl
 																}
-																onClick={() =>
-																	toggleSubMenu(
-																		item.itemTitle
-																	)
-																} // Toggle between open/close
+																className='flex flex-row justify-left'
 															>
 																<item.itemIcon
 																	size={20}
@@ -238,105 +375,17 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 																		item.itemTitle
 																	}
 																</span>
-																{isOpen ? (
-																	<ChevronDown
-																		className='ml-auto'
-																		size={
-																			16
-																		}
-																	/>
-																) : (
-																	<ChevronRight
-																		className='ml-auto'
-																		size={
-																			16
-																		}
-																	/>
-																)}
-															</SidebarMenuButton>
-														</CollapsibleTrigger>
-														<CollapsibleContent>
-															<SidebarMenuSub>
-																{item.subMenu.map(
-																	(
-																		subItem
-																	) => (
-																		<SidebarMenuSubItem
-																			key={
-																				subItem.subTitle
-																			}
-																		>
-																			<SidebarMenuButton
-																				asChild
-																				isActive={
-																					currentPath ==
-																					subItem.subUrl
-																				}
-																			>
-																				<a
-																					href={
-																						baseUrl +
-																						subItem.subUrl
-																					}
-																					className='flex flex-row justify-left'
-																				>
-																					<subItem.subIcon
-																						size={
-																							20
-																						}
-																						className='mr-1'
-																					/>
-																					<span>
-																						{
-																							subItem.subTitle
-																						}
-																					</span>
-																				</a>
-																			</SidebarMenuButton>
-																		</SidebarMenuSubItem>
-																	)
-																)}
-															</SidebarMenuSub>
-														</CollapsibleContent>
+															</a>
+														</SidebarMenuButton>
 													</SidebarMenuItem>
-												</Collapsible>
-											);
-										} else {
-											return (
-												<SidebarMenuItem
-													key={item.itemTitle}
-												>
-													<SidebarMenuButton
-														asChild
-														isActive={
-															currentPath ==
-															item.itemUrl
-														}
-													>
-														<a
-															href={
-																baseUrl +
-																item.itemUrl
-															}
-															className='flex flex-row justify-left'
-														>
-															<item.itemIcon
-																size={20}
-																className='mr-1'
-															/>
-															<span>
-																{item.itemTitle}
-															</span>
-														</a>
-													</SidebarMenuButton>
-												</SidebarMenuItem>
-											);
-										}
-									})}
-								</SidebarMenu>
-							</SidebarGroupContent>
-						</SidebarGroup>
-					))}
+												);
+											}
+										})}
+									</SidebarMenu>
+								</SidebarGroupContent>
+							</SidebarGroup>
+						);
+					})}
 				</SidebarContent>
 
 				<Separator />
