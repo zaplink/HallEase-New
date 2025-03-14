@@ -1,20 +1,13 @@
 import SidebarLayout from '@/layouts/Sidebar/Layout';
 import React from 'react';
 import SignupForm from './SignupForm';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
+import PageHeader from '@/components/custom/PageHeader';
 
 const Registration = () => {
 	return (
 		<>
 			<SidebarLayout>
-				<div className='mb-12'>
-					<Label className='font-bold text-xl'>
-						Register a New User
-					</Label>
-					<Separator className='my-3' />
-				</div>
-
+				<PageHeader title='Register a New User' />
 				<SignupForm />
 			</SidebarLayout>
 		</>

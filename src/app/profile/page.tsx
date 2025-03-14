@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/button';
 import ProtectedPage from '@/layouts/ProtectedPage';
 import { RootState, AppDispatch } from '@/redux/store';
 import { fetchUserData } from '@/redux/authSlice';
+import PageHeader from '@/components/custom/PageHeader';
+import Loading from '@/components/custom/Loading';
 
 export default function Profile() {
 	const dispatch = useDispatch<AppDispatch>();
@@ -58,20 +60,17 @@ export default function Profile() {
 	return (
 		<ProtectedPage>
 			<SidebarLayout>
-				<div className='pl-2 pt-4'>
+				<div>
 					{/* Profile Section */}
 					<div className='mb-12'>
-						<Label className='font-bold text-xl'>
-							Profile Information
-						</Label>
-						<Separator className='my-3' />
+						<PageHeader title='Profile Information' />
 
-						{loading && <p className='text-blue-500'>Loading...</p>}
+						{loading && <Loading />}
 						{error && <p className='text-red-500'>{error}</p>}
 
 						{!loading && !error && user && (
 							<>
-								<div className='my-6'>
+								<div className='mb-6'>
 									<Label className='font-semibold mb-1'>
 										Name
 									</Label>

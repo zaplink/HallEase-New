@@ -12,6 +12,7 @@ import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 
 import PageHeader from '@/components/custom/PageHeader';
+import Loading from '@/components/custom/Loading';
 
 export default function Hall() {
 	const { id } = useParams<{ id: string }>();
@@ -32,7 +33,7 @@ export default function Hall() {
 	if (loading) {
 		return (
 			<SidebarLayout>
-				<p>Loading...</p>
+				<Loading className='mt-10 mx-auto' />
 			</SidebarLayout>
 		);
 	}

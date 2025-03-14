@@ -238,13 +238,13 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 				</>
 			);
 		return (
-			<>
-				<Avatar className='mr-1'>
-					<AvatarImage src='https://github.com/shadcn.png' />
-					<AvatarFallback>Invalid User</AvatarFallback>
-				</Avatar>
-				<span className='font-bold'>Invalid User</span>
-			</>
+			<div className='flex items-center space-x-3'>
+				<Skeleton className='h-10 w-10 rounded-full' />
+				<div className='space-y-3'>
+					<Skeleton className='h-3 w-[180px]' />
+					<Skeleton className='h-3 w-[160px]' />
+				</div>
+			</div>
 		);
 	};
 
@@ -499,7 +499,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 				<Separator />
 
 				{/* Put page content here*/}
-				<main className='px-2 pt-1 flex flex-col h-full'>
+				<main className='px-4 pt-2 flex flex-col h-full'>
 					{children}
 				</main>
 				<Toaster />

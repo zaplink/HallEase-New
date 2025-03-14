@@ -13,8 +13,8 @@ const PageHeader: FC<PageHeaderProps> = ({
 	extra,
 }) => {
 	return (
-		<div className='w-full pb-6'>
-			<div className='flex justify-between items-start py-2'>
+		<div className='w-full pb-4'>
+			<div className='flex justify-between items-start pb-2'>
 				<div>
 					<h2 className='text-xl font-semibold'>{title}</h2>
 
