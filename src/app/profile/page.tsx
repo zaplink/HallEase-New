@@ -1,17 +1,23 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import SidebarLayout from '@/layouts/Sidebar/Layout';
-import { useProfile } from '@/hooks/useProfile';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import ProtectedPage from '@/layouts/ProtectedPage';
+import { RootState, AppDispatch } from '@/redux/store';
+import { fetchUserData } from '@/redux/authSlice';
 
 export default function Profile() {
-	// const { profile, loading } = useProfile();
-	const { profile } = useProfile();
+	const dispatch = useDispatch<AppDispatch>();
+
+	// Redux state
+	const { user, loading, error } = useSelector(
+		(state: RootState) => state.auth
+	);
 
 	// State for form fields
 	const [name, setName] = useState('');
@@ -20,13 +26,18 @@ export default function Profile() {
 	const [newPassword, setNewPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
 
-	// Update state when profile data is available
+	// Fetch user data on mount
 	useEffect(() => {
-		if (profile) {
-			setName(profile.full_name || '');
-			setEmail(profile.email || '');
+		dispatch(fetchUserData());
+	}, [dispatch]);
+
+	// Update state when Redux profile data is available
+	useEffect(() => {
+		if (user) {
+			setName(user.full_name || '');
+			setEmail(user.email || '');
 		}
-	}, [profile]);
+	}, [user]);
 
 	// Handle profile update (dummy function)
 	const handleProfileUpdate = () => {
@@ -55,32 +66,47 @@ export default function Profile() {
 						</Label>
 						<Separator className='my-3' />
 
-						<div className='my-6'>
-							<Label className='font-semibold mb-1'>Name</Label>
-							<Input
-								value={name}
-								onChange={(e) => setName(e.target.value)}
-								className='w-2/5'
-							/>
-						</div>
+						{loading && <p className='text-blue-500'>Loading...</p>}
+						{error && <p className='text-red-500'>{error}</p>}
 
-						<div className='my-6'>
-							<Label className='font-semibold mb-1'>Email</Label>
-							<Input
-								value={email}
-								onChange={(e) => setEmail(e.target.value)}
-								className='w-2/5'
-							/>
-						</div>
+						{!loading && !error && user && (
+							<>
+								<div className='my-6'>
+									<Label className='font-semibold mb-1'>
+										Name
+									</Label>
+									<Input
+										value={name}
+										onChange={(e) =>
+											setName(e.target.value)
+										}
+										className='w-2/5'
+									/>
+								</div>
 
-						<div className='my-6'>
-							<Button
-								variant='default'
-								onClick={handleProfileUpdate}
-							>
-								Update Profile
-							</Button>
-						</div>
+								<div className='my-6'>
+									<Label className='font-semibold mb-1'>
+										Email
+									</Label>
+									<Input
+										value={email}
+										onChange={(e) =>
+											setEmail(e.target.value)
+										}
+										className='w-2/5'
+									/>
+								</div>
+
+								<div className='my-6'>
+									<Button
+										variant='default'
+										onClick={handleProfileUpdate}
+									>
+										Update Profile
+									</Button>
+								</div>
+							</>
+						)}
 					</div>
 
 					{/* Password Section */}
@@ -138,8 +164,8 @@ export default function Profile() {
 						</div>
 					</div>
 
+					{/* Activities Section */}
 					<div className='mb-12'>
-						{/* Activities Section */}
 						<Label className='font-bold text-xl'>Activities</Label>
 						<Separator className='my-3' />
 

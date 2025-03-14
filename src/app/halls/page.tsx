@@ -8,15 +8,15 @@ import { columns } from './columns';
 import { DataTable } from './data-table';
 import { getHalls } from '@/lib/getHalls';
 import { useEffect, useState } from 'react';
-import ProtectedComponent from './ProtectedComponent';
-import { fetchProfile } from '@/lib/fetchProfile';
+// import ProtectedComponent from './ProtectedComponent';
+// import { fetchProfile } from '@/lib/fetchProfile';
 
 export default function Hall() {
 	const [halls, setHalls] = useState<HallType[] | null>(null);
-	const [profile, setProfile] = useState<{
-		full_name: string;
-		id: string;
-	} | null>(null);
+	// const [profile, setProfile] = useState<{
+	// 	full_name: string;
+	// 	id: string;
+	// } | null>(null);
 	// const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
@@ -25,14 +25,14 @@ export default function Hall() {
 			setHalls(data);
 		}
 
-		async function fetchUser() {
-			const profileData = await fetchProfile();
-			setProfile(profileData);
-			// setLoading(false);
-		}
+		// async function fetchUser() {
+		// 	const profileData = await fetchProfile();
+		// 	setProfile(profileData);
+		// 	// setLoading(false);
+		// }
 
 		fetchHalls();
-		fetchUser();
+		// fetchUser();
 	}, []);
 
 	return (
@@ -43,14 +43,7 @@ export default function Hall() {
 					{halls === null ? (
 						<p>Loading halls...</p>
 					) : (
-						<>
-							{profile === null ? (
-								<p>Loading profile...</p>
-							) : (
-								<ProtectedComponent profileId={profile?.id} />
-							)}
-							<DataTable columns={columns} data={halls} />
-						</>
+						<DataTable columns={columns} data={halls} />
 					)}
 				</div>
 			</SidebarLayout>

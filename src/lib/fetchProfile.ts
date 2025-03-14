@@ -4,8 +4,6 @@
 
 import { createClient } from '@/lib/supabaseClient';
 
-const supabase = createClient();
-
 interface UserProfile {
 	id: string;
 	full_name: string;
@@ -13,6 +11,7 @@ interface UserProfile {
 }
 
 export async function fetchProfile(): Promise<UserProfile | null> {
+	const supabase = createClient();
 	const { data: authData, error: authError } = await supabase.auth.getUser();
 	if (authError || !authData?.user) {
 		console.error('Error fetching user:', authError);

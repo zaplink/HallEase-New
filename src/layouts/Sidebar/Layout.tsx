@@ -42,7 +42,7 @@ import {
 	CollapsibleContent,
 } from '@/components/ui/collapsible';
 import Link from 'next/link';
-import { useProfile } from '@/hooks/useProfile';
+// import { useProfile } from '@/hooks/useProfile';
 import {
 	Drawer,
 	DrawerContent,
@@ -57,10 +57,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 import LogoutButton from './LogoutButton';
 import { Toaster } from '@/components/ui/sonner';
 
-import { fetchProfile } from '@/lib/fetchProfile';
-import { Profile as ProfileType } from '@/types/profile';
-import ProtectedComponent from '@/app/halls/ProtectedComponent';
-import { getUserPermissions } from '@/lib/auth';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserData } from '@/redux/authSlice';
+import { RootState, AppDispatch } from '@/redux/store';
 
 type SidebarLayoutProps = Readonly<{
 	children: React.ReactNode;
@@ -85,27 +84,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 		setOpenSubMenu((prev) => (prev === menuTitle ? null : menuTitle));
 	};
 
-	const { profile, loading } = useProfile();
-
-	const [user, setUser] = useState<ProfileType | null>(null);
-	const [permissions, setPermissions] = useState<string[]>([]);
-
-	useEffect(() => {
-		async function fetchUser() {
-			const profileData = await fetchProfile();
-			setUser(profileData);
-		}
-		fetchUser();
-	}, []);
-
-	useEffect(() => {
-		async function fetchPermissions() {
-			if (!user?.id) return;
-			const userPermissions = await getUserPermissions(user.id);
-			setPermissions(userPermissions);
-		}
-		fetchPermissions();
-	}, [user?.id]);
+	// const { profile, loading } = useProfile();
 
 	const findBreadcrumb = (path: string) => {
 		const breadcrumbs: { title: string; url: string }[] = [];
@@ -165,8 +144,65 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 		));
 	};
 
+	// const getAvatar = () => {
+	// 	if (loading)
+	// 		return (
+	// 			<div className='flex items-center space-x-3'>
+	// 				<Skeleton className='h-10 w-10 rounded-full' />
+	// 				<div className='space-y-3'>
+	// 					<Skeleton className='h-3 w-[180px]' />
+	// 					<Skeleton className='h-3 w-[160px]' />
+	// 				</div>
+	// 			</div>
+	// 		);
+	// 	if (profile)
+	// 		return (
+	// 			<>
+	// 				<Avatar className='mr-1'>
+	// 					<AvatarImage src={profile.pro_pic} />
+	// 					<AvatarFallback>User</AvatarFallback>
+	// 				</Avatar>
+	// 				<span className='font-bold'>{profile?.full_name}</span>
+	// 			</>
+	// 		);
+	// 	return (
+	// 		<>
+	// 			<Avatar className='mr-1'>
+	// 				<AvatarImage src='https://github.com/shadcn.png' />
+	// 				<AvatarFallback>Invalid User</AvatarFallback>
+	// 			</Avatar>
+	// 			<span className='font-bold'>Invalid User</span>
+	// 		</>
+	// 	);
+	// };
+
+	const dispatch = useDispatch<AppDispatch>();
+	const {
+		user,
+		loading: userLoading,
+		error: userError,
+	} = useSelector((state: RootState) => state.auth);
+
+	const [full_name, setFullName] = useState('');
+	const [pro_pic, setProPic] = useState('');
+	const [userRole, setUserRole] = useState('');
+
+	// Fetch user data on mount
+	useEffect(() => {
+		dispatch(fetchUserData());
+	}, [dispatch]);
+
+	// Update state when Redux profile data is available
+	useEffect(() => {
+		if (user) {
+			setFullName(user.full_name || '');
+			setProPic(user.pro_pic || '');
+			setUserRole(user.role || '');
+		}
+	}, [user]);
+
 	const getAvatar = () => {
-		if (loading)
+		if (userLoading)
 			return (
 				<div className='flex items-center space-x-3'>
 					<Skeleton className='h-10 w-10 rounded-full' />
@@ -176,14 +212,29 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 					</div>
 				</div>
 			);
-		if (profile)
+
+		if (userError)
+			return (
+				<div className='flex items-center space-x-3'>
+					<Skeleton className='h-10 w-10 rounded-full' />
+					<div className='space-y-3'>
+						<span className='font-bold text-red-500'>Error!</span>
+					</div>
+				</div>
+			);
+		if (user)
 			return (
 				<>
 					<Avatar className='mr-1'>
-						<AvatarImage src={profile.pro_pic} />
+						<AvatarImage src={pro_pic} />
 						<AvatarFallback>User</AvatarFallback>
 					</Avatar>
-					<span className='font-bold'>{profile?.full_name}</span>
+					<div className='flex flex-col'>
+						<span className='font-bold'>{full_name}</span>
+						<span className='font-medium text-gray-600'>
+							{userRole}
+						</span>
+					</div>
 				</>
 			);
 		return (
@@ -220,151 +271,39 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 				<Separator />
 
 				<SidebarContent>
-					{sidebarMenu.map((section) => {
-						// Filter out items based on role permissions
-						const filteredItems = section.sectionMenu.filter(
-							(item) =>
-								item.roleSlugs.some((role) =>
-									permissions.includes(role)
-								)
-						);
-
-						// If no items remain in the section, skip rendering
-						if (filteredItems.length === 0) return null;
-						return (
-							<SidebarGroup key={section.sectionTitle}>
-								<SidebarGroupLabel>
-									{section.sectionTitle}
-								</SidebarGroupLabel>
-								<SidebarGroupContent>
-									<SidebarMenu>
-										{filteredItems.map((item) => {
-											const hasPermission =
-												item.roleSlugs.some((role) =>
-													permissions.includes(role)
-												); // Check if user has required role
-
-											if (!hasPermission) return null;
-
-											if (item.subMenu) {
-												const isOpen =
-													openSubMenu ===
-													item.itemTitle;
-												return (
-													<Collapsible
-														className='group/collapsible'
-														key={item.itemTitle}
-														open={isOpen}
-													>
-														<SidebarMenuItem
-															key={item.itemTitle}
-														>
-															<CollapsibleTrigger
-																asChild
-															>
-																<SidebarMenuButton
-																	isActive={
-																		currentPath ==
-																		item.itemUrl
-																	}
-																	onClick={() =>
-																		toggleSubMenu(
-																			item.itemTitle
-																		)
-																	} // Toggle between open/close
-																>
-																	<item.itemIcon
-																		size={
-																			20
-																		}
-																		className='mr-1'
-																	/>
-																	<span>
-																		{
-																			item.itemTitle
-																		}
-																	</span>
-																	{isOpen ? (
-																		<ChevronDown
-																			className='ml-auto'
-																			size={
-																				16
-																			}
-																		/>
-																	) : (
-																		<ChevronRight
-																			className='ml-auto'
-																			size={
-																				16
-																			}
-																		/>
-																	)}
-																</SidebarMenuButton>
-															</CollapsibleTrigger>
-															<CollapsibleContent>
-																<SidebarMenuSub>
-																	{item.subMenu.map(
-																		(
-																			subItem
-																		) => (
-																			<SidebarMenuSubItem
-																				key={
-																					subItem.subTitle
-																				}
-																			>
-																				<SidebarMenuButton
-																					asChild
-																					isActive={
-																						currentPath ==
-																						subItem.subUrl
-																					}
-																				>
-																					<a
-																						href={
-																							baseUrl +
-																							subItem.subUrl
-																						}
-																						className='flex flex-row justify-left'
-																					>
-																						<subItem.subIcon
-																							size={
-																								20
-																							}
-																							className='mr-1'
-																						/>
-																						<span>
-																							{
-																								subItem.subTitle
-																							}
-																						</span>
-																					</a>
-																				</SidebarMenuButton>
-																			</SidebarMenuSubItem>
-																		)
-																	)}
-																</SidebarMenuSub>
-															</CollapsibleContent>
-														</SidebarMenuItem>
-													</Collapsible>
-												);
-											} else {
-												return (
+					{sidebarMenu.map((section) => (
+						<SidebarGroup key={section.sectionTitle}>
+							<SidebarGroupLabel>
+								{section.sectionTitle}
+							</SidebarGroupLabel>
+							<SidebarGroupContent>
+								<SidebarMenu>
+									{section.sectionMenu.map((item) => {
+										if (item.subMenu) {
+											const isOpen =
+												openSubMenu === item.itemTitle;
+											return (
+												<Collapsible
+													className='group/collapsible'
+													key={item.itemTitle}
+													open={isOpen}
+												>
 													<SidebarMenuItem
 														key={item.itemTitle}
 													>
-														<SidebarMenuButton
+														<CollapsibleTrigger
 															asChild
-															isActive={
-																currentPath ==
-																item.itemUrl
-															}
 														>
-															<a
-																href={
-																	baseUrl +
+															<SidebarMenuButton
+																isActive={
+																	currentPath ==
 																	item.itemUrl
 																}
-																className='flex flex-row justify-left'
+																onClick={() =>
+																	toggleSubMenu(
+																		item.itemTitle
+																	)
+																} // Toggle between open/close
 															>
 																<item.itemIcon
 																	size={20}
@@ -375,17 +314,105 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 																		item.itemTitle
 																	}
 																</span>
-															</a>
-														</SidebarMenuButton>
+																{isOpen ? (
+																	<ChevronDown
+																		className='ml-auto'
+																		size={
+																			16
+																		}
+																	/>
+																) : (
+																	<ChevronRight
+																		className='ml-auto'
+																		size={
+																			16
+																		}
+																	/>
+																)}
+															</SidebarMenuButton>
+														</CollapsibleTrigger>
+														<CollapsibleContent>
+															<SidebarMenuSub>
+																{item.subMenu.map(
+																	(
+																		subItem
+																	) => (
+																		<SidebarMenuSubItem
+																			key={
+																				subItem.subTitle
+																			}
+																		>
+																			<SidebarMenuButton
+																				asChild
+																				isActive={
+																					currentPath ==
+																					subItem.subUrl
+																				}
+																			>
+																				<a
+																					href={
+																						baseUrl +
+																						subItem.subUrl
+																					}
+																					className='flex flex-row justify-left'
+																				>
+																					<subItem.subIcon
+																						size={
+																							20
+																						}
+																						className='mr-1'
+																					/>
+																					<span>
+																						{
+																							subItem.subTitle
+																						}
+																					</span>
+																				</a>
+																			</SidebarMenuButton>
+																		</SidebarMenuSubItem>
+																	)
+																)}
+															</SidebarMenuSub>
+														</CollapsibleContent>
 													</SidebarMenuItem>
-												);
-											}
-										})}
-									</SidebarMenu>
-								</SidebarGroupContent>
-							</SidebarGroup>
-						);
-					})}
+												</Collapsible>
+											);
+										} else {
+											return (
+												<SidebarMenuItem
+													key={item.itemTitle}
+												>
+													<SidebarMenuButton
+														asChild
+														isActive={
+															currentPath ==
+															item.itemUrl
+														}
+													>
+														<a
+															href={
+																baseUrl +
+																item.itemUrl
+															}
+															className='flex flex-row justify-left'
+														>
+															<item.itemIcon
+																size={20}
+																className='mr-1'
+															/>
+															<span>
+																{item.itemTitle}
+															</span>
+														</a>
+													</SidebarMenuButton>
+												</SidebarMenuItem>
+											);
+										}
+									})}
+								</SidebarMenu>
+							</SidebarGroupContent>
+						</SidebarGroup>
+					))}
 				</SidebarContent>
 
 				<Separator />
@@ -472,7 +499,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 				<Separator />
 
 				{/* Put page content here*/}
-				<main className='pt-1 flex flex-col h-full px-4'>
+				<main className='px-2 pt-1 flex flex-col h-full'>
 					{children}
 				</main>
 				<Toaster />

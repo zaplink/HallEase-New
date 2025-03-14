@@ -14,6 +14,8 @@ import clsx from 'clsx';
 import { createClient } from '@/lib/supabaseServer';
 import { redirect } from 'next/navigation';
 
+// import ProfileInfo from './ProfileInfo';
+
 export default async function Event() {
 	const supabase = await createClient();
 	const { data, error } = await supabase.auth.getUser();
@@ -23,6 +25,8 @@ export default async function Event() {
 
 	return (
 		<SidebarLayout>
+			{/* <ProfileInfo /> */}
+
 			<div
 				style={{
 					display: 'centre',
