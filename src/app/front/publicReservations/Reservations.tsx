@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Auditorium from './Auditorium';
+import Studio from './Studio';
 
 const Reservations = () => {
 	return (
@@ -25,7 +26,7 @@ const Reservations = () => {
 					<Auditorium />
 				</TabsContent>
 				<TabsContent value='studio'>
-					<p>Implement reservations for studio</p>
+					<Studio />
 				</TabsContent>
 				<TabsContent value='lectureRoom'>
 					<p>Implement reservations for Lecture rooms</p>

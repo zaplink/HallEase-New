@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -58,6 +59,7 @@ const formSchema = z.object({
 });
 
 export function AuditoriumForm() {
+	const [agreed, setAgreed] = useState(false);
 	// 1. Define your form.
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -96,7 +98,7 @@ export function AuditoriumForm() {
 							<FormLabel>Event Name</FormLabel>
 							<FormControl>
 								<Input
-									placeholder='Organization'
+									placeholder='Name of the event'
 									type='text'
 									{...field}
 								/>
@@ -306,6 +308,25 @@ export function AuditoriumForm() {
 						</FormItem>
 					)}
 				/>
+
+				<div className='flex items-center gap-2'>
+					<input
+						type='checkbox'
+						id='terms'
+						checked={agreed}
+						onChange={() => setAgreed(!agreed)}
+						className='w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500'
+					/>
+					<label htmlFor='terms' className='text-gray-700 text-sm'>
+						I agree to the{' '}
+						<a
+							href='/terms'
+							className='text-blue-600 hover:underline'
+						>
+							Terms and Conditions
+						</a>
+					</label>
+				</div>
 
 				<Button type='submit' className='w-full'>
 					Submit
