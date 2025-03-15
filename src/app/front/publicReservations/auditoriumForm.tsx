@@ -47,11 +47,14 @@ const formSchema = z.object({
 		message: 'Invalid time format. Use HH:MM (24-hour format).',
 	}),
 
-	// email: z.string().email({ message: "Enter a valid email address." }),
+	// contact details
+	applicant: z.string(),
+	position: z.string(),
+	email: z.string().email({ message: 'Enter a valid email address.' }),
 
-	// phone: z
-	//   .string()
-	//   .regex(/^\+?[0-9]{10,15}$/, { message: "Enter a valid phone number (10-15 digits, optional +)." }),
+	phone: z.string().regex(/^\+?[0-9]{10,15}$/, {
+		message: 'Enter a valid phone number (10-15 digits, optional +).',
+	}),
 });
 
 export function AuditoriumForm() {
@@ -226,6 +229,83 @@ export function AuditoriumForm() {
 						/>
 					</div>
 				</div>
+
+				{/* contact details of the applicant  */}
+				<hr />
+
+				<p className='text-gray-500 text-lg m-0'>Contact details</p>
+
+				<FormField
+					control={form.control}
+					name='applicant'
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Name</FormLabel>
+							<FormControl>
+								<Input
+									type='text'
+									placeholder="Enter the applicant's name"
+									{...field}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name='position'
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Position</FormLabel>
+							<FormControl>
+								<Input
+									type='text'
+									placeholder='Enter your position in the organization or company'
+									{...field}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name='email'
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Email</FormLabel>
+							<FormControl>
+								<Input
+									type='email'
+									placeholder='Enter email'
+									{...field}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name='phone'
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Phone Number</FormLabel>
+							<FormControl>
+								<Input
+									type='tel'
+									placeholder='Enter phone number (WhatsApp preffered)'
+									{...field}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
 
 				<Button type='submit' className='w-full'>
 					Submit
