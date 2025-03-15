@@ -62,7 +62,7 @@ export default function LogoutButton() {
 							onClick={handleLogout}
 							disabled={isPending}
 						>
-							{isPending ? 'Logging out...' : 'Logout'}
+							{isPending ? 'Logging Out...' : 'Logout'}
 						</Button>
 					</DialogFooter>
 				</DialogContent>

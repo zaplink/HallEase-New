@@ -1,0 +1,31 @@
+{
+	"roles": {
+		"system": {
+			"inherits": ["admin"],
+			"permissions": ["*"],
+			"restrict": []
+		},
+		"admin": {
+			"inherits": ["user"],
+			"permissions": ["*"],
+			"restrict": []
+		},
+		"user": {
+			"inherits": ["guest"],
+			"permissions": ["*"],
+			"restrict": []
+		},
+		"guest": {
+			"inherits": [],
+			"permissions": ["*"],
+			"restrict": []
+		}
+	},
+	"permissions": {
+		"MBR": {
+			"description": "Manage Booking Requests",
+			"dependencies": [],
+			"conflicts": []
+		}
+	}
+}

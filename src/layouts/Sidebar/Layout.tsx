@@ -33,7 +33,7 @@ import {
 	BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar } from '@/components/ui/calendar';
 import { getBaseUrl } from '@/utils/getBaseUrl';
 import {
@@ -42,7 +42,7 @@ import {
 	CollapsibleContent,
 } from '@/components/ui/collapsible';
 import Link from 'next/link';
-import { useProfile } from '@/hooks/useProfile';
+// import { useProfile } from '@/hooks/useProfile';
 import {
 	Drawer,
 	DrawerContent,
@@ -56,6 +56,12 @@ import sidebarMenu from '@/layouts/Sidebar/menu-items';
 import { Skeleton } from '@/components/ui/skeleton';
 import LogoutButton from './LogoutButton';
 import { Toaster } from '@/components/ui/sonner';
+
+
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserData } from '@/redux/authSlice';
+import { RootState, AppDispatch } from '@/redux/store';
+
 
 type SidebarLayoutProps = Readonly<{
 	children: React.ReactNode;
@@ -80,7 +86,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 		setOpenSubMenu((prev) => (prev === menuTitle ? null : menuTitle));
 	};
 
-	const { profile, loading } = useProfile();
+	// const { profile, loading } = useProfile();
 
 	const findBreadcrumb = (path: string) => {
 		const breadcrumbs: { title: string; url: string }[] = [];
@@ -140,8 +146,65 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 		));
 	};
 
+	// const getAvatar = () => {
+	// 	if (loading)
+	// 		return (
+	// 			<div className='flex items-center space-x-3'>
+	// 				<Skeleton className='h-10 w-10 rounded-full' />
+	// 				<div className='space-y-3'>
+	// 					<Skeleton className='h-3 w-[180px]' />
+	// 					<Skeleton className='h-3 w-[160px]' />
+	// 				</div>
+	// 			</div>
+	// 		);
+	// 	if (profile)
+	// 		return (
+	// 			<>
+	// 				<Avatar className='mr-1'>
+	// 					<AvatarImage src={profile.pro_pic} />
+	// 					<AvatarFallback>User</AvatarFallback>
+	// 				</Avatar>
+	// 				<span className='font-bold'>{profile?.full_name}</span>
+	// 			</>
+	// 		);
+	// 	return (
+	// 		<>
+	// 			<Avatar className='mr-1'>
+	// 				<AvatarImage src='https://github.com/shadcn.png' />
+	// 				<AvatarFallback>Invalid User</AvatarFallback>
+	// 			</Avatar>
+	// 			<span className='font-bold'>Invalid User</span>
+	// 		</>
+	// 	);
+	// };
+
+	const dispatch = useDispatch<AppDispatch>();
+	const {
+		user,
+		loading: userLoading,
+		error: userError,
+	} = useSelector((state: RootState) => state.auth);
+
+	const [full_name, setFullName] = useState('');
+	const [pro_pic, setProPic] = useState('');
+	const [userRole, setUserRole] = useState('');
+
+	// Fetch user data on mount
+	useEffect(() => {
+		dispatch(fetchUserData());
+	}, [dispatch]);
+
+	// Update state when Redux profile data is available
+	useEffect(() => {
+		if (user) {
+			setFullName(user.full_name || '');
+			setProPic(user.pro_pic || '');
+			setUserRole(user.role || '');
+		}
+	}, [user]);
+
 	const getAvatar = () => {
-		if (loading)
+		if (userLoading)
 			return (
 				<div className='flex items-center space-x-3'>
 					<Skeleton className='h-10 w-10 rounded-full' />
@@ -151,24 +214,39 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 					</div>
 				</div>
 			);
-		if (profile)
+
+		if (userError)
+			return (
+				<div className='flex items-center space-x-3'>
+					<Skeleton className='h-10 w-10 rounded-full' />
+					<div className='space-y-3'>
+						<span className='font-bold text-red-500'>Error!</span>
+					</div>
+				</div>
+			);
+		if (user)
 			return (
 				<>
 					<Avatar className='mr-1'>
-						<AvatarImage src={profile.pro_pic} />
+						<AvatarImage src={pro_pic} />
 						<AvatarFallback>User</AvatarFallback>
 					</Avatar>
-					<span className='font-bold'>{profile?.full_name}</span>
+					<div className='flex flex-col'>
+						<span className='font-bold'>{full_name}</span>
+						<span className='font-medium text-gray-600'>
+							{userRole}
+						</span>
+					</div>
 				</>
 			);
 		return (
-			<>
-				<Avatar className='mr-1'>
-					<AvatarImage src='https://github.com/shadcn.png' />
-					<AvatarFallback>Invalid User</AvatarFallback>
-				</Avatar>
-				<span className='font-bold'>Invalid User</span>
-			</>
+			<div className='flex items-center space-x-3'>
+				<Skeleton className='h-10 w-10 rounded-full' />
+				<div className='space-y-3'>
+					<Skeleton className='h-3 w-[180px]' />
+					<Skeleton className='h-3 w-[160px]' />
+				</div>
+			</div>
 		);
 	};
 
@@ -423,7 +501,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 				<Separator />
 
 				{/* Put page content here*/}
-				<main className='px-2 pt-1 flex flex-col h-full'>
+				<main className='px-4 pt-2 flex flex-col h-full'>
 					{children}
 				</main>
 				<Toaster />
