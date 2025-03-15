@@ -28,8 +28,8 @@ const TestUs = () => {
 					height: '100%',
 				}}
 			>
-				<div className='container mx-auto p-20 bg-black bg-opacity-35 rounded-3xl'>
-					<h2 className='text-6xl font-bold text-white no-3 uppercase mb-10'>
+				<div className='container mx-auto p-20 bg-black bg-opacity-35 rounded-3xl overflow-y-auto'>
+					<h2 className='text-4xl font-bold text-white no-3 uppercase mb-10'>
 						CONTACT & SUPPORT
 					</h2>
 
