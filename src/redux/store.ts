@@ -11,6 +11,8 @@ import {
 	REGISTER,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+// ✅ Correct redux-thunk import
+import { thunk } from 'redux-thunk';
 
 const persistConfig = {
 	key: 'root',
@@ -36,7 +38,8 @@ export const store = configureStore({
 					REGISTER,
 				],
 			},
-		}),
+		}).concat(thunk), // ✅ Corrected import
+	devTools: process.env.NODE_ENV !== 'production', // ✅ Enables Redux DevTools
 });
 
 export const persistor = persistStore(store);
