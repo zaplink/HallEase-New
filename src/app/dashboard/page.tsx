@@ -18,6 +18,8 @@ import { MoreHorizontal, ChevronRight } from 'lucide-react';
 // import React from 'react';
 import PieChart from './pie-chart';
 
+import TestComponent from './TestComponent';
+
 export default async function Dashboard() {
 	// navigate back to login if user not logged
 	const supabase = await createClient();
@@ -28,8 +30,10 @@ export default async function Dashboard() {
 	}
 
 	// const [date, setDate] = React.useState<Date | undefined>(new Date());
+
 	return (
 		<SidebarLayout>
+			<TestComponent />
 			{/* Grid Layout */}
 			<div className='grid grid-cols-3 gap-x-4 gap-y-6'>
 				{/* Column-1|2 */}
