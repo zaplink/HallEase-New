@@ -13,6 +13,7 @@ import { FaInfoCircle } from 'react-icons/fa';
 import clsx from 'clsx';
 import { createClient } from '@/lib/supabaseServer';
 import { redirect } from 'next/navigation';
+import Loading from '@/components/custom/Loading';
 
 // import TestComponent from '../dashboard/TestComponent';
 
@@ -30,6 +31,8 @@ export default async function Event() {
 			{/* <ProfileInfo /> */}
 
 			{/* <TestComponent /> */}
+
+			<Loading reason='Testing' />
 
 			<div
 				style={{

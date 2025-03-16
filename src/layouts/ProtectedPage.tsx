@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabaseClient';
 import { User } from '@supabase/supabase-js';
+import Loading from '@/components/custom/Loading';
 
 export default function ProtectedPage({
 	children,
@@ -27,11 +28,13 @@ export default function ProtectedPage({
 
 	if (user === 'loading')
 		return (
-			<div className='flex justify-center items-center h-screen'>
-				<p className='text-gray-500 text-lg'>
-					Checking authentication...
-				</p>
-			</div>
+			// <div className='flex justify-center items-center h-screen'>
+			// 	<p className='text-blue-950 text-lg'>
+			// 		Checking authentication...
+			// 	</p>
+			// </div>
+
+			<Loading reason='Checking Authentication' pageView={true} />
 		);
 
 	return <>{children}</>;

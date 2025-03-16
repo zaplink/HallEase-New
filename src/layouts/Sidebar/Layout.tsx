@@ -357,9 +357,8 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 																					subItem.subUrl
 																				}
 																			>
-																				<a
+																				<Link
 																					href={
-																						baseUrl +
 																						subItem.subUrl
 																					}
 																					className='flex flex-row justify-left'
@@ -375,7 +374,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 																							subItem.subTitle
 																						}
 																					</span>
-																				</a>
+																				</Link>
 																			</SidebarMenuButton>
 																		</SidebarMenuSubItem>
 																	)
@@ -397,11 +396,8 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 															item.itemUrl
 														}
 													>
-														<a
-															href={
-																baseUrl +
-																item.itemUrl
-															}
+														<Link
+															href={item.itemUrl}
 															className='flex flex-row justify-left'
 														>
 															<item.itemIcon
@@ -411,7 +407,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 															<span>
 																{item.itemTitle}
 															</span>
-														</a>
+														</Link>
 													</SidebarMenuButton>
 												</SidebarMenuItem>
 											);

@@ -10,6 +10,7 @@ import { getHalls } from '@/lib/getHalls';
 import { useEffect, useState } from 'react';
 // import ProtectedComponent from './ProtectedComponent';
 // import { fetchProfile } from '@/lib/fetchProfile';
+import Loading from '@/components/custom/Loading';
 
 export default function Hall() {
 	const [halls, setHalls] = useState<HallType[] | null>(null);
@@ -41,7 +42,8 @@ export default function Hall() {
 			<SidebarLayout>
 				<div className='container mx-auto'>
 					{halls === null ? (
-						<p>Loading halls...</p>
+						// <p>Loading halls...</p>
+						<Loading reason='Loading Halls' pageView={true} />
 					) : (
 						<DataTable columns={columns} data={halls} />
 					)}
