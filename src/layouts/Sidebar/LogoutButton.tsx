@@ -10,16 +10,19 @@ import {
 import { Button } from '@/components/ui/button';
 import { logout } from '@/lib/logoutAction';
 import { DialogTitle } from '@radix-ui/react-dialog';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
+import { clearAuth } from '@/redux/authSlice';
 
 export default function LogoutButton() {
-	// State to control modal visibility
 	const [open, setOpen] = useState(false);
-	// Handle async server action
 	const [isPending, startTransition] = useTransition();
+	const dispatch = useDispatch<AppDispatch>();
 
 	const handleLogout = () => {
 		startTransition(async () => {
-			await logout();
+			await logout(); // Server-side logout
+			dispatch(clearAuth()); // Client-side Redux state reset
 		});
 	};
 

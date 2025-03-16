@@ -94,4 +94,17 @@ export const fetchUserData = () => async (dispatch: AppDispatch) => {
 	}
 };
 
+// **Thunk to Logout**
+export const logoutUser = () => async (dispatch: AppDispatch) => {
+	const supabase = createClientInstance();
+
+	try {
+		await supabase.auth.signOut(); // Sign out from Supabase
+		dispatch(clearAuth()); // Clear Redux state
+	} catch (error) {
+		dispatch(setError('Logout failed'));
+		console.log(error);
+	}
+};
+
 export default authSlice.reducer;
