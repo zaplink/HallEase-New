@@ -21,9 +21,9 @@ export default function LogoutButton() {
 
 	const handleLogout = () => {
 		startTransition(async () => {
-			dispatch(clearAuth()); // Client-side Redux state reset
 			await logout(); // Server-side logout
 		});
+		dispatch(clearAuth()); // Client-side Redux state reset
 	};
 
 	return (
