@@ -10,14 +10,12 @@ import {
 	PURGE,
 	REGISTER,
 } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-// ✅ Correct redux-thunk import
-import { thunk } from 'redux-thunk';
+import storage from './storage'; // ✅ Use safe storage for Next.js
 
 const persistConfig = {
 	key: 'root',
 	storage,
-	whitelist: ['auth'],
+	whitelist: ['auth'], // ✅ Persist only 'auth' slice
 };
 
 const persistedAuthReducer = persistReducer(persistConfig, authReducer);
@@ -38,8 +36,8 @@ export const store = configureStore({
 					REGISTER,
 				],
 			},
-		}).concat(thunk), // ✅ Corrected import
-	devTools: process.env.NODE_ENV !== 'production', // ✅ Enables Redux DevTools
+		}), // ✅ Don't manually add redux-thunk, it's included by default
+	devTools: process.env.NODE_ENV !== 'production', // ✅ Enable Redux DevTools only in dev mode
 });
 
 export const persistor = persistStore(store);
