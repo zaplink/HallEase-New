@@ -10,6 +10,8 @@ export default function TestComponent() {
 		return <p>Loading user data...</p>;
 	}
 
+	console.log('User Data from Redux:', user);
+
 	return (
 		<div>
 			<h2>Welcome, {user.full_name}!</h2>

@@ -56,6 +56,8 @@ export const fetchUserData = () => async (dispatch: AppDispatch) => {
 	const supabase = createClientInstance();
 
 	try {
+		dispatch(clearAuth());
+
 		const { data: authData, error: authError } =
 			await supabase.auth.getUser();
 		if (authError || !authData?.user)
@@ -84,6 +86,7 @@ export const fetchUserData = () => async (dispatch: AppDispatch) => {
 
 		dispatch(setUser(userData));
 	} catch (error) {
+		dispatch(clearAuth());
 		dispatch(
 			setError(
 				error instanceof Error
