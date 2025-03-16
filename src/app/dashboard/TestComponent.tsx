@@ -4,11 +4,13 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 
 export default function TestComponent() {
-	const user = useSelector((state: RootState) => state.auth.user);
+	const { user, loading, error } = useSelector(
+		(state: RootState) => state.auth
+	);
 
-	if (!user) {
-		return <p>Loading user data...</p>;
-	}
+	if (loading) return <p>Loading user data...</p>;
+	if (error) return <p>Error: {error}</p>;
+	if (!user) return <p>No user data found.</p>;
 
 	console.log('User Data from Redux:', user);
 
