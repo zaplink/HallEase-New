@@ -23,7 +23,7 @@ import {
 	SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 import { usePathname } from 'next/navigation';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+// import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import {
 	Breadcrumb,
@@ -33,7 +33,7 @@ import {
 	BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Calendar } from '@/components/ui/calendar';
 import { getBaseUrl } from '@/utils/getBaseUrl';
 import {
@@ -53,15 +53,15 @@ import {
 } from '@/components/ui/drawer';
 import { format } from 'date-fns';
 import sidebarMenu from '@/layouts/Sidebar/menu-items';
-import { Skeleton } from '@/components/ui/skeleton';
+// import { Skeleton } from '@/components/ui/skeleton';
 import LogoutButton from './LogoutButton';
 import { Toaster } from '@/components/ui/sonner';
 
+// import { useDispatch, useSelector } from 'react-redux';
+// import { fetchUserData } from '@/redux/authSlice';
+// import { RootState, AppDispatch } from '@/redux/store';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserData } from '@/redux/authSlice';
-import { RootState, AppDispatch } from '@/redux/store';
-
+import ProfileWidget from './ProfileWidget';
 
 type SidebarLayoutProps = Readonly<{
 	children: React.ReactNode;
@@ -146,6 +146,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 		));
 	};
 
+	// ---------------- Before adding Redux commented below
 	// const getAvatar = () => {
 	// 	if (loading)
 	// 		return (
@@ -178,77 +179,81 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 	// 	);
 	// };
 
-	const dispatch = useDispatch<AppDispatch>();
-	const {
-		user,
-		loading: userLoading,
-		error: userError,
-	} = useSelector((state: RootState) => state.auth);
+	// ---------------- After adding Redux persist commented below
+	// ---------------- USed ProfileWidget instead getAvatar
+	// ---------------- Some errors occur such as stay in loading
+	// ---------------- Changed @/redux/Providers with some similar codes and looked working
+	// const dispatch = useDispatch<AppDispatch>();
+	// const {
+	// 	user,
+	// 	loading: userLoading,
+	// 	error: userError,
+	// } = useSelector((state: RootState) => state.auth);
 
-	const [full_name, setFullName] = useState('');
-	const [pro_pic, setProPic] = useState('');
-	const [userRole, setUserRole] = useState('');
+	// const [full_name, setFullName] = useState('');
+	// const [pro_pic, setProPic] = useState('');
+	// const [userRole, setUserRole] = useState('');
 
-	// Fetch user data on mount
-	useEffect(() => {
-		dispatch(fetchUserData());
-	}, [dispatch]);
+	// // Fetch user data on mount
+	// useEffect(() => {
+	// 	dispatch(fetchUserData());
+	// }, [dispatch]);
 
-	// Update state when Redux profile data is available
-	useEffect(() => {
-		if (user) {
-			setFullName(user.full_name || '');
-			setProPic(user.pro_pic || '');
-			setUserRole(user.role || '');
-		}
-	}, [user]);
+	// // Update state when Redux profile data is available
+	// useEffect(() => {
+	// 	if (user) {
+	// 		setFullName(user.full_name || '');
+	// 		setProPic(user.pro_pic || '');
+	// 		setUserRole(user.role || '');
+	// 	}
+	// }, [user]);
 
-	const getAvatar = () => {
-		if (userLoading)
-			return (
-				<div className='flex items-center space-x-3'>
-					<Skeleton className='h-10 w-10 rounded-full' />
-					<div className='space-y-3'>
-						<Skeleton className='h-3 w-[180px]' />
-						<Skeleton className='h-3 w-[160px]' />
-					</div>
-				</div>
-			);
+	// const getAvatar = () => {
+	// 	if (userLoading)
+	// 		return (
+	// 			<div className='flex items-center space-x-3'>
+	// 				<Skeleton className='h-10 w-10 rounded-full' />
+	// 				<div className='space-y-3'>
+	// 					<Skeleton className='h-3 w-[180px]' />
+	// 					<Skeleton className='h-3 w-[160px]' />
+	// 				</div>
+	// 			</div>
+	// 		);
 
-		if (userError)
-			return (
-				<div className='flex items-center space-x-3'>
-					<Skeleton className='h-10 w-10 rounded-full' />
-					<div className='space-y-3'>
-						<span className='font-bold text-red-500'>Error!</span>
-					</div>
-				</div>
-			);
-		if (user)
-			return (
-				<>
-					<Avatar className='mr-1'>
-						<AvatarImage src={pro_pic} />
-						<AvatarFallback>User</AvatarFallback>
-					</Avatar>
-					<div className='flex flex-col'>
-						<span className='font-bold'>{full_name}</span>
-						<span className='font-medium text-gray-600'>
-							{userRole}
-						</span>
-					</div>
-				</>
-			);
-		return (
-			<div className='flex items-center space-x-3'>
-				<Skeleton className='h-10 w-10 rounded-full' />
-				<div className='space-y-3'>
-					<Skeleton className='h-3 w-[180px]' />
-					<Skeleton className='h-3 w-[160px]' />
-				</div>
-			</div>
-		);
-	};
+	// 	if (userError)
+	// 		return (
+	// 			<div className='flex items-center space-x-3'>
+	// 				<Skeleton className='h-10 w-10 rounded-full' />
+	// 				<div className='space-y-3'>
+	// 					<span className='font-bold text-red-500'>Error!</span>
+	// 				</div>
+	// 			</div>
+	// 		);
+	// 	if (user)
+	// 		return (
+	// 			<>
+	// 				<Avatar className='mr-1'>
+	// 					<AvatarImage src={pro_pic} />
+	// 					<AvatarFallback>User</AvatarFallback>
+	// 				</Avatar>
+	// 				<div className='flex flex-col'>
+	// 					<span className='font-bold'>{full_name}</span>
+	// 					<span className='font-medium text-gray-600'>
+	// 						{userRole}
+	// 					</span>
+	// 				</div>
+	// 			</>
+	// 		);
+	// 	return (
+	// 		<div className='flex items-center space-x-3'>
+	// 			<Skeleton className='h-10 w-10 rounded-full' />
+	// 			<div className='space-y-3'>
+	// 				<Skeleton className='h-3 w-[180px]' />
+	// 				<Skeleton className='h-3 w-[160px]' />
+	// 			</div>
+	// 		</div>
+	// 	);
+	// };
 
 	return (
 		// Sidebar placeholder
@@ -263,7 +268,8 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 								className='flex flex-row justify-left'
 							>
 								<SidebarMenuButton className='h-auto p-0 my-2 mx-1'>
-									{getAvatar()}
+									{<ProfileWidget />}
+									{/* {getAvatar()} */}
 								</SidebarMenuButton>
 							</Link>
 						</SidebarMenuItem>
