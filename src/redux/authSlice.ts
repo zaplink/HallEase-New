@@ -56,7 +56,7 @@ export const fetchUserData = () => async (dispatch: AppDispatch) => {
 	const supabase = createClientInstance();
 
 	try {
-		dispatch(clearAuth());
+		// dispatch(clearAuth());
 
 		const { data: authData, error: authError } =
 			await supabase.auth.getUser();
