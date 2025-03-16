@@ -18,7 +18,7 @@ import { MoreHorizontal, ChevronRight } from 'lucide-react';
 // import React from 'react';
 import PieChart from './pie-chart';
 
-import TestComponent from './TestComponent';
+// import TestComponent from './TestComponent';
 
 export default async function Dashboard() {
 	// navigate back to login if user not logged
@@ -33,7 +33,7 @@ export default async function Dashboard() {
 
 	return (
 		<SidebarLayout>
-			<TestComponent />
+			{/* <TestComponent /> */}
 			{/* Grid Layout */}
 			<div className='grid grid-cols-3 gap-x-4 gap-y-6'>
 				{/* Column-1|2 */}

@@ -14,7 +14,7 @@ import clsx from 'clsx';
 import { createClient } from '@/lib/supabaseServer';
 import { redirect } from 'next/navigation';
 
-import TestComponent from '../dashboard/TestComponent';
+// import TestComponent from '../dashboard/TestComponent';
 
 // import ProfileInfo from './ProfileInfo';
 
@@ -29,7 +29,7 @@ export default async function Event() {
 		<SidebarLayout>
 			{/* <ProfileInfo /> */}
 
-			<TestComponent />
+			{/* <TestComponent /> */}
 
 			<div
 				style={{

@@ -17,7 +17,7 @@ export default function TestComponent() {
 	return (
 		<div>
 			<h2>Welcome, {user.full_name}!</h2>
-			<img src={user.pro_pic} alt='Profile' width={100} height={100} />
+			{/* <img src={user.pro_pic} alt='Profile' width={100} height={100} /> */}
 			<p>Email: {user.email}</p>
 			<p>Role: {user.role}</p>
 			<p>Permissions: {user.permissions.join(', ')}</p>
