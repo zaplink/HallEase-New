@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { fetchUserData } from '@/redux/authSlice';
 import { AppDispatch, RootState } from '@/redux/store';
 import { clearAuth } from '@/redux/authSlice';
+import Loading from '@/components/custom/Loading';
 
 export default function CallbackPage() {
 	const router = useRouter();
@@ -21,5 +22,7 @@ export default function CallbackPage() {
 		if (user) router.push('/dashboard');
 	}, [user, router]);
 
-	return <p>Processing login...</p>;
+	return <Loading className='mt-20 mx-auto' />;
+
+	// return <p>Processing login...</p>;
 }
