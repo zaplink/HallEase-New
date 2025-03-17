@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import SidebarLayout from '@/layouts/Sidebar/Layout';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import ProtectedPage from '@/layouts/ProtectedPage';
@@ -110,10 +109,7 @@ export default function Profile() {
 
 					{/* Password Section */}
 					<div className='mb-12'>
-						<Label className='font-bold text-xl'>
-							Password & Authentication
-						</Label>
-						<Separator className='my-3' />
+						<PageHeader title='Password & Authentication' />
 
 						<div className='my-6'>
 							<Label className='font-semibold mb-1'>
@@ -165,8 +161,7 @@ export default function Profile() {
 
 					{/* Activities Section */}
 					<div className='mb-12'>
-						<Label className='font-bold text-xl'>Activities</Label>
-						<Separator className='my-3' />
+						<PageHeader title='Activities' />
 
 						<div className='my-6 flex flex-col'>
 							<Label className='font-semibold mb-1'>
