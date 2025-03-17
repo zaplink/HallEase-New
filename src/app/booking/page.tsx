@@ -1,5 +1,5 @@
 import React from 'react';
-import Bookingformnew from '@/components/ui/bookingformnew';
+import BookingForm from './BookingForm';
 import SidebarLayout from '@/layouts/Sidebar/Layout';
 import { createClient } from '@/lib/supabaseServer';
 import { redirect } from 'next/navigation';
@@ -19,10 +19,10 @@ async function page() {
 			<PageHeader
 				title='Book a Hall'
 				descriptions={[
-					'Submit key details for your event to complete your booking efficiently.',
+					'Provide the required details to proceed with your booking',
 				]}
 			/>
-			<Bookingformnew />
+			<BookingForm />
 		</SidebarLayout>
 	);
 }
