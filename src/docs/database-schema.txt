@@ -1,0 +1,23 @@
+CREATE TABLE roles (
+    tag TEXT PRIMARY KEY,
+    description TEXT DEFAULT NULL
+);
+
+CREATE TABLE permissions (
+    tag TEXT PRIMARY KEY,
+    description TEXT DEFAULT NULL
+);
+
+CREATE TABLE role_permissions (
+    role_tag TEXT REFERENCES roles(tag) ON DELETE CASCADE,
+    permission_tag TEXT REFERENCES permissions(tag) ON DELETE CASCADE,
+    PRIMARY KEY (role_tag, permission_tag)
+);
+
+CREATE TABLE permission_dependencies (
+    permission_tag TEXT REFERENCES permissions(tag) ON DELETE CASCADE,
+    dependency_tag TEXT REFERENCES permissions(tag) ON DELETE CASCADE,
+    PRIMARY KEY (permission_tag, dependency_tag)
+);
+
+

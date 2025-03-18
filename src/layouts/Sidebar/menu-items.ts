@@ -18,6 +18,7 @@ import {
 	FileChartColumn,
 	UserPlus,
 	ContactRound,
+	Lock,
 } from 'lucide-react';
 
 export interface SubMenuItem {
@@ -46,11 +47,13 @@ const sidebarMenu = [
 				itemTitle: 'Dashboard',
 				itemUrl: '/dashboard',
 				itemIcon: LayoutDashboard,
+				roleSlugs: [],
 			},
 			{
 				itemTitle: 'Calender View',
 				itemUrl: '/calender-view',
 				itemIcon: CalendarClock,
+				roleSlugs: [],
 			},
 		],
 	},
@@ -61,6 +64,7 @@ const sidebarMenu = [
 				itemTitle: 'View Events',
 				itemUrl: '/event',
 				itemIcon: Airplay,
+				roleSlugs: [],
 			},
 		],
 	},
@@ -71,11 +75,13 @@ const sidebarMenu = [
 				itemTitle: 'Book a Hall',
 				itemUrl: '/booking',
 				itemIcon: FilePlus2,
+				roleSlugs: [],
 			},
 			{
 				itemTitle: 'Booking Requests',
 				itemUrl: '/requests',
 				itemIcon: BookOpen,
+				roleSlugs: ['MBR'],
 				subMenu: [
 					{
 						subTitle: 'Pending',
@@ -96,8 +102,9 @@ const sidebarMenu = [
 			},
 			{
 				itemTitle: 'Hall Facilities',
-				itemUrl: '/hall',
+				itemUrl: '/halls',
 				itemIcon: Building2,
+				roleSlugs: [],
 			},
 		],
 	},
@@ -108,11 +115,13 @@ const sidebarMenu = [
 				itemTitle: 'Announcements',
 				itemUrl: '/announcments',
 				itemIcon: Megaphone,
+				roleSlugs: [],
 			},
 			{
 				itemTitle: 'Email & SMS Reminders',
 				itemUrl: '/remainders',
 				itemIcon: Mails,
+				roleSlugs: [],
 			},
 		],
 	},
@@ -123,11 +132,13 @@ const sidebarMenu = [
 				itemTitle: 'Reports',
 				itemUrl: '/reports',
 				itemIcon: FileChartColumn,
+				roleSlugs: [],
 			},
 			{
 				itemTitle: 'Analytics',
 				itemUrl: '/analytics',
 				itemIcon: ChartNoAxesCombined,
+				roleSlugs: [],
 			},
 		],
 	},
@@ -138,11 +149,13 @@ const sidebarMenu = [
 				itemTitle: 'System Preferences',
 				itemUrl: '/system-preferences',
 				itemIcon: Settings,
+				roleSlugs: [],
 			},
 			{
 				itemTitle: 'Access Control',
 				itemUrl: '/access-control',
 				itemIcon: UserCog,
+				roleSlugs: [],
 				subMenu: [
 					{
 						subTitle: 'User Registration',
@@ -157,6 +170,12 @@ const sidebarMenu = [
 					},
 				],
 			},
+			{
+				itemTitle: 'Roles & Permissions',
+				itemUrl: '/roles-permissions',
+				itemIcon: Lock,
+				roleSlugs: [],
+			},
 		],
 	},
 	{
@@ -166,11 +185,13 @@ const sidebarMenu = [
 				itemTitle: 'FAQs & Documentation',
 				itemUrl: '/documentation',
 				itemIcon: CircleHelp,
+				roleSlugs: [],
 			},
 			{
 				itemTitle: 'Report an Issue',
 				itemUrl: '/report-issue',
 				itemIcon: Flag,
+				roleSlugs: [],
 			},
 		],
 	},

@@ -29,7 +29,7 @@ import {
 import { BsFillQuestionCircleFill } from 'react-icons/bs';
 import { login } from '../../lib/LoginActions';
 import { useState } from 'react';
-import { Loader } from 'lucide-react';
+import Loading from '@/components/custom/Loading';
 
 // Define the form schema with new fields for email and password
 const formSchema = z.object({
@@ -125,9 +125,8 @@ export default function LoginForm() {
 						>
 							{isLoading ? (
 								<>
-									<Loader className='animate-spin w-5 h-5' />{' '}
-									{/* Spinning loader */}
-									<span>Logging in...</span>
+									<Loading /> {/* Spinning loader */}
+									<span>Logging In...</span>
 								</>
 							) : (
 								'Login'

@@ -10,38 +10,42 @@ import {
 import { Button } from '@/components/ui/button';
 import { logout } from '@/lib/logoutAction';
 import { DialogTitle } from '@radix-ui/react-dialog';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
+import { clearAuth } from '@/redux/authSlice';
 
 export default function LogoutButton() {
-	// State to control modal visibility
 	const [open, setOpen] = useState(false);
-	// Handle async server action
 	const [isPending, startTransition] = useTransition();
+	const dispatch = useDispatch<AppDispatch>();
 
 	const handleLogout = () => {
 		startTransition(async () => {
-			await logout();
+			await logout(); // Server-side logout
 		});
+		dispatch(clearAuth()); // Client-side Redux state reset
 	};
 
 	return (
 		<>
 			{/* Logout Button (Opens the Dialog) */}
-			<button
+			<Button
 				onClick={() => setOpen(true)} // Open dialog on click
-				className='flex flex-row justify-left items-center'
+				className='flex flex-row pl-0 w-full justify-start'
+				variant='ghost'
 			>
 				<LogOut size={20} className='mr-1 text-red-500' />
 				<span className='text-red-500'>Logout</span>
-			</button>
+			</Button>
 
 			{/* Logout Confirmation Modal */}
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>
-							<h2 className='text-lg font-semibold'>
+							<span className='text-lg font-semibold'>
 								Confirm Logout
-							</h2>
+							</span>
 						</DialogTitle>
 						<p className='text-sm text-gray-500'>
 							Are you sure you want to log out?
@@ -61,7 +65,7 @@ export default function LogoutButton() {
 							onClick={handleLogout}
 							disabled={isPending}
 						>
-							{isPending ? 'Logging out...' : 'Logout'}
+							{isPending ? 'Logging Out...' : 'Logout'}
 						</Button>
 					</DialogFooter>
 				</DialogContent>

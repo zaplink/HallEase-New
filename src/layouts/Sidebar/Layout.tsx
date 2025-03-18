@@ -23,7 +23,7 @@ import {
 	SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 import { usePathname } from 'next/navigation';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+// import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import {
 	Breadcrumb,
@@ -42,7 +42,7 @@ import {
 	CollapsibleContent,
 } from '@/components/ui/collapsible';
 import Link from 'next/link';
-import { useProfile } from '@/hooks/useProfile';
+// import { useProfile } from '@/hooks/useProfile';
 import {
 	Drawer,
 	DrawerContent,
@@ -53,8 +53,15 @@ import {
 } from '@/components/ui/drawer';
 import { format } from 'date-fns';
 import sidebarMenu from '@/layouts/Sidebar/menu-items';
-import { Skeleton } from '@/components/ui/skeleton';
+// import { Skeleton } from '@/components/ui/skeleton';
 import LogoutButton from './LogoutButton';
+import { Toaster } from '@/components/ui/sonner';
+
+// import { useDispatch, useSelector } from 'react-redux';
+// import { fetchUserData } from '@/redux/authSlice';
+// import { RootState, AppDispatch } from '@/redux/store';
+
+import ProfileWidget from './ProfileWidget';
 
 type SidebarLayoutProps = Readonly<{
 	children: React.ReactNode;
@@ -79,7 +86,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 		setOpenSubMenu((prev) => (prev === menuTitle ? null : menuTitle));
 	};
 
-	const { profile, loading } = useProfile();
+	// const { profile, loading } = useProfile();
 
 	const findBreadcrumb = (path: string) => {
 		const breadcrumbs: { title: string; url: string }[] = [];
@@ -139,37 +146,114 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 		));
 	};
 
-	const getAvatar = () => {
-		if (loading)
-			return (
-				<div className='flex items-center space-x-3'>
-					<Skeleton className='h-10 w-10 rounded-full' />
-					<div className='space-y-3'>
-						<Skeleton className='h-3 w-[180px]' />
-						<Skeleton className='h-3 w-[160px]' />
-					</div>
-				</div>
-			);
-		if (profile)
-			return (
-				<>
-					<Avatar className='mr-1'>
-						<AvatarImage src={profile.pro_pic} />
-						<AvatarFallback>User</AvatarFallback>
-					</Avatar>
-					<span className='font-bold'>{profile?.full_name}</span>
-				</>
-			);
-		return (
-			<>
-				<Avatar className='mr-1'>
-					<AvatarImage src='https://github.com/shadcn.png' />
-					<AvatarFallback>Invalid User</AvatarFallback>
-				</Avatar>
-				<span className='font-bold'>Invalid User</span>
-			</>
-		);
-	};
+	// ---------------- Before adding Redux commented below
+	// const getAvatar = () => {
+	// 	if (loading)
+	// 		return (
+	// 			<div className='flex items-center space-x-3'>
+	// 				<Skeleton className='h-10 w-10 rounded-full' />
+	// 				<div className='space-y-3'>
+	// 					<Skeleton className='h-3 w-[180px]' />
+	// 					<Skeleton className='h-3 w-[160px]' />
+	// 				</div>
+	// 			</div>
+	// 		);
+	// 	if (profile)
+	// 		return (
+	// 			<>
+	// 				<Avatar className='mr-1'>
+	// 					<AvatarImage src={profile.pro_pic} />
+	// 					<AvatarFallback>User</AvatarFallback>
+	// 				</Avatar>
+	// 				<span className='font-bold'>{profile?.full_name}</span>
+	// 			</>
+	// 		);
+	// 	return (
+	// 		<>
+	// 			<Avatar className='mr-1'>
+	// 				<AvatarImage src='https://github.com/shadcn.png' />
+	// 				<AvatarFallback>Invalid User</AvatarFallback>
+	// 			</Avatar>
+	// 			<span className='font-bold'>Invalid User</span>
+	// 		</>
+	// 	);
+	// };
+
+	// ---------------- After adding Redux persist commented below
+	// ---------------- USed ProfileWidget instead getAvatar
+	// ---------------- Some errors occur such as stay in loading
+	// ---------------- Changed @/redux/Providers with some similar codes and looked working
+	// const dispatch = useDispatch<AppDispatch>();
+	// const {
+	// 	user,
+	// 	loading: userLoading,
+	// 	error: userError,
+	// } = useSelector((state: RootState) => state.auth);
+
+	// const [full_name, setFullName] = useState('');
+	// const [pro_pic, setProPic] = useState('');
+	// const [userRole, setUserRole] = useState('');
+
+	// // Fetch user data on mount
+	// useEffect(() => {
+	// 	dispatch(fetchUserData());
+	// }, [dispatch]);
+
+	// // Update state when Redux profile data is available
+	// useEffect(() => {
+	// 	if (user) {
+	// 		setFullName(user.full_name || '');
+	// 		setProPic(user.pro_pic || '');
+	// 		setUserRole(user.role || '');
+	// 	}
+	// }, [user]);
+
+	// const getAvatar = () => {
+	// 	if (userLoading)
+	// 		return (
+	// 			<div className='flex items-center space-x-3'>
+	// 				<Skeleton className='h-10 w-10 rounded-full' />
+	// 				<div className='space-y-3'>
+	// 					<Skeleton className='h-3 w-[180px]' />
+	// 					<Skeleton className='h-3 w-[160px]' />
+	// 				</div>
+	// 			</div>
+	// 		);
+
+	// 	if (userError)
+	// 		return (
+	// 			<div className='flex items-center space-x-3'>
+	// 				<Skeleton className='h-10 w-10 rounded-full' />
+	// 				<div className='space-y-3'>
+	// 					<span className='font-bold text-red-500'>Error!</span>
+	// 				</div>
+	// 			</div>
+	// 		);
+	// 	if (user)
+	// 		return (
+	// 			<>
+	// 				<Avatar className='mr-1'>
+	// 					<AvatarImage src={pro_pic} />
+	// 					<AvatarFallback>User</AvatarFallback>
+	// 				</Avatar>
+	// 				<div className='flex flex-col'>
+	// 					<span className='font-bold'>{full_name}</span>
+	// 					<span className='font-medium text-gray-600'>
+	// 						{userRole}
+	// 					</span>
+	// 				</div>
+	// 			</>
+	// 		);
+	// 	return (
+	// 		<div className='flex items-center space-x-3'>
+	// 			<Skeleton className='h-10 w-10 rounded-full' />
+	// 			<div className='space-y-3'>
+	// 				<Skeleton className='h-3 w-[180px]' />
+	// 				<Skeleton className='h-3 w-[160px]' />
+	// 			</div>
+	// 		</div>
+	// 	);
+	// };
 
 	return (
 		// Sidebar placeholder
@@ -183,8 +267,9 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 								href={baseUrl + '/profile'}
 								className='flex flex-row justify-left'
 							>
-								<SidebarMenuButton className='h-auto p-0 m-2'>
-									{getAvatar()}
+								<SidebarMenuButton className='h-auto p-0 my-2 mx-1'>
+									{<ProfileWidget />}
+									{/* {getAvatar()} */}
 								</SidebarMenuButton>
 							</Link>
 						</SidebarMenuItem>
@@ -272,9 +357,8 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 																					subItem.subUrl
 																				}
 																			>
-																				<a
+																				<Link
 																					href={
-																						baseUrl +
 																						subItem.subUrl
 																					}
 																					className='flex flex-row justify-left'
@@ -290,7 +374,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 																							subItem.subTitle
 																						}
 																					</span>
-																				</a>
+																				</Link>
 																			</SidebarMenuButton>
 																		</SidebarMenuSubItem>
 																	)
@@ -312,11 +396,8 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 															item.itemUrl
 														}
 													>
-														<a
-															href={
-																baseUrl +
-																item.itemUrl
-															}
+														<Link
+															href={item.itemUrl}
 															className='flex flex-row justify-left'
 														>
 															<item.itemIcon
@@ -326,7 +407,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 															<span>
 																{item.itemTitle}
 															</span>
-														</a>
+														</Link>
 													</SidebarMenuButton>
 												</SidebarMenuItem>
 											);
@@ -422,7 +503,10 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 				<Separator />
 
 				{/* Put page content here*/}
-				<div className='px-2 pt-2 flex flex-col h-full'>{children}</div>
+				<main className='px-4 pt-2 flex flex-col h-full'>
+					{children}
+				</main>
+				<Toaster />
 			</div>
 		</SidebarProvider>
 	);
