@@ -1,4 +1,4 @@
-import Requestpage from '@/components/ui/Requestpage';
+import RequestDetails from './RequestDetails';
 import SidebarLayout from '@/layouts/Sidebar/Layout';
 import { createClient } from '@/lib/supabaseServer';
 import { redirect } from 'next/navigation';
@@ -12,7 +12,7 @@ export default async function pending() {
 
 	return (
 		<SidebarLayout>
-			<Requestpage />
+			<RequestDetails />
 		</SidebarLayout>
 	);
 }

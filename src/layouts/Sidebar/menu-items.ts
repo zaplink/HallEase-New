@@ -18,6 +18,7 @@ import {
 	FileChartColumn,
 	UserPlus,
 	ContactRound,
+	Lock,
 } from 'lucide-react';
 
 export interface SubMenuItem {
@@ -168,6 +169,12 @@ const sidebarMenu = [
 						subIcon: ContactRound,
 					},
 				],
+			},
+			{
+				itemTitle: 'Roles & Permissions',
+				itemUrl: '/roles-permissions',
+				itemIcon: Lock,
+				roleSlugs: [],
 			},
 		],
 	},

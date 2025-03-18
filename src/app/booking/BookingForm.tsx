@@ -1,6 +1,6 @@
 'use client';
-import { Combobox } from '../combobox';
-import { DatePickerDemo } from './DatePicker';
+import { Combobox } from '@/components/combobox';
+import { DatePickerDemo } from '@/components/ui/DatePicker';
 import { useForm } from 'react-hook-form';
 // import '@/app/bookingnewstyle.css';
 
